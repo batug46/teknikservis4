@@ -3,13 +3,6 @@ import Navbar from '../components/Navbar';
 import Providers from './providers';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../lib/auth';
-import { Inter } from 'next/font/google';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
 
 export const metadata = {
   title: 'Efe Bilgisayar ve Güvenlik Sistemleri',
@@ -26,8 +19,8 @@ export default async function RootLayout({ children }) {
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="tr" className={inter.variable} suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}>
+    <html lang="tr" suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200 font-sans">
         <Providers session={session}>
           <Navbar />
           <main className="container mx-auto px-4 py-8 flex-grow">
