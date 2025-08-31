@@ -15,7 +15,7 @@ body {
   background: rgb(var(--background-rgb));
   min-height: 100vh;
   padding-top: 80px;
-  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
@@ -24,10 +24,10 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Inter font optimizations */
+/* Font optimizations */
 @layer base {
   * {
-    font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
