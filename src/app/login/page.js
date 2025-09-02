@@ -116,10 +116,17 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
-          <div className="text-sm text-center">
-            <Link href="/register" className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-all duration-150 ease-out will-change-transform hover:scale-105">
-              Hesabınız yok mu? Hemen kaydolun
-            </Link>
+          <div className="text-sm text-center space-y-2">
+            <div>
+              <Link href="/forgot-password" className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-all duration-150 ease-out will-change-transform hover:scale-105">
+                Şifrenizi mi unuttunuz?
+              </Link>
+            </div>
+            <div>
+              <Link href="/register" className="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-all duration-150 ease-out will-change-transform hover:scale-105">
+                Hesabınız yok mu? Hemen kaydolun
+              </Link>
+            </div>
           </div>
         </div>
       </div>
