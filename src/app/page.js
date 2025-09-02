@@ -130,27 +130,9 @@ export default async function Home() {
                                 />
                             ))
                         ) : (
-                            // Fallback hizmetler (eğer veritabanında hizmet yoksa)
-                            <>
-                        <ServiceCard 
-                            title="Bilgisayar Tamiri"
-                            description="Donanım ve yazılım sorunlarınıza hızlı, garantili ve güvenilir çözümler sunuyoruz."
-                            link="/products?category=bilgisayar-tamiri"
-                                    imageUrl="https://images.pexels.com/photos/4005596/pexels-photo-4005596.jpeg"
-                        />
-                        <ServiceCard 
-                            title="Telefon Tamiri"
-                            description="Ekran değişimi, batarya sorunları ve diğer tüm marka model telefon tamir işlemleri."
-                            link="/products?category=telefon-tamiri"
-                                    imageUrl="https://images.pexels.com/photos/607812/pexels-photo-607812.jpeg"
-                        />
-                        <ServiceCard 
-                            title="Güvenlik Sistemleri"
-                            description="Kamera ve alarm sistemleri kurulumu ile ev ve iş yerinizi güvence altına alıyoruz."
-                            link="/products?category=guvenlik-sistemleri"
-                                    imageUrl="https://images.pexels.com/photos/277553/pexels-photo-277553.jpeg"
-                        />
-                            </>
+                            <div className="col-span-full text-center py-12">
+                                <p className="text-gray-500 text-lg">Henüz hizmet eklenmemiş. Admin panelinden hizmet ekleyebilirsiniz.</p>
+                            </div>
                         )}
                     </div>
                 </div>
