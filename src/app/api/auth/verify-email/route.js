@@ -114,12 +114,19 @@ export async function POST(request) {
       where: { email }
     });
 
-    // Süresi dolmuş tüm token'ları temizle (test için)
+    // Süresi dolmuş token'ları temizle
     await prisma.emailVerification.deleteMany({
       where: {
-        expiresAt: {
-          lt: new Date()
-        }
+        expiresAt: { lt: new Date() }
+      }
+    });
+
+    // Aynı IP'den gelen tüm aktif token'ları temizle (çakışmayı önlemek için)
+    // Bu sayede aynı IP'den sadece 1 aktif token olur
+    await prisma.emailVerification.deleteMany({
+      where: {
+        email: { not: email },
+        expiresAt: { gte: new Date() }
       }
     });
 
