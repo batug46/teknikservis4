@@ -34,7 +34,7 @@ export default function VerifyEmail() {
 
       if (response.ok) {
         setStatus('success');
-        setMessage('Email adresiniz başarıyla doğrulandı! Artık giriş yapabilirsiniz.');
+        setMessage('Email adresiniz başarıyla doğrulandı! Şimdi hesap bilgilerinizi tamamlayabilirsiniz.');
       } else {
         setStatus('error');
         setMessage(data.error || 'Doğrulama işlemi başarısız');
@@ -75,10 +75,10 @@ export default function VerifyEmail() {
                 {message}
               </p>
               <a
-                href="/login"
+                href="/register"
                 className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Giriş Yap
+                Hesap Bilgilerini Tamamla
               </a>
             </>
           )}

@@ -32,13 +32,31 @@ export default function RegisterPage() {
     if (!formData.email) return;
     
     try {
-      const response = await fetch('/api/auth/verify-email', {
+      const response = await fetch('/api/auth/check-email-status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email })
       });
 
-      if (response.ok) {
+      const data = await response.json();
+
+      if (data.status === 'user_exists') {
+        setMessage({ 
+          type: 'error', 
+          text: 'Bu email adresi zaten kayıtlı. Giriş yapmayı deneyin.' 
+        });
+      } else if (data.status === 'pending_verification') {
+        setMessage({ 
+          type: 'error', 
+          text: 'Email henüz doğrulanmamış. Email kutunuzu kontrol edin ve doğrulama linkine tıklayın.' 
+        });
+      } else if (data.status === 'not_verified') {
+        setMessage({ 
+          type: 'error', 
+          text: 'Doğrulama süresi dolmuş. Lütfen tekrar doğrulama emaili isteyin.' 
+        });
+      } else if (data.status === 'verified') {
+        // Email doğrulanmış, 2. adıma geç
         setEmailVerified(true);
         setStep(2);
         setMessage({ 
@@ -47,7 +65,10 @@ export default function RegisterPage() {
         });
       }
     } catch (error) {
-      // Sessizce hata yok say
+      setMessage({ 
+        type: 'error', 
+        text: 'Doğrulama kontrolü yapılamadı.' 
+      });
     }
   };
 
