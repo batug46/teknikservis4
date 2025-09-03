@@ -45,7 +45,8 @@ async function verifyEmailToken(token) {
 
     return NextResponse.json({
       message: 'Email başarıyla doğrulandı',
-      email: emailVerification.email
+      email: emailVerification.email,
+      redirectUrl: `/register?email=${encodeURIComponent(emailVerification.email)}`
     });
 
   } catch (error) {

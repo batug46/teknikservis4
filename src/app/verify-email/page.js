@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
 export default function VerifyEmail() {
   const [status, setStatus] = useState('loading'); // loading, success, error
   const [message, setMessage] = useState('');
   const searchParams = useSearchParams();
+  const router = useRouter();
   const token = searchParams.get('token');
 
   useEffect(() => {
@@ -38,7 +39,11 @@ export default function VerifyEmail() {
         
         // 2 saniye sonra kayıt sayfasına yönlendir
         setTimeout(() => {
-          router.push(`/register?email=${encodeURIComponent(data.email)}`);
+          if (data.redirectUrl) {
+            router.push(data.redirectUrl);
+          } else {
+            router.push(`/register?email=${encodeURIComponent(data.email)}`);
+          }
         }, 2000);
       } else {
         setStatus('error');
