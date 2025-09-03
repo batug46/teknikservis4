@@ -121,7 +121,7 @@ export async function POST(request) {
     // Doğrulama emaili gönder
     try {
       await resend.emails.send({
-        from: 'onboarding@resend.dev', // Geçici email
+        from: 'noreply@tekniverse.xyz', // Kendi domain email
         to: email,
         subject: 'Email Doğrulama - Teknik Servis',
         html: `
