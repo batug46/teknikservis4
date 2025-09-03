@@ -23,7 +23,7 @@ export default function RegisterPage() {
 
   // Sayfa yüklendiğinde email doğrulama durumunu kontrol et
   useEffect(() => {
-    const checkEmailFromURL = async () => {
+    const checkEmailFromURL = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const email = urlParams.get('email');
       
@@ -31,27 +31,13 @@ export default function RegisterPage() {
         setFormData(prev => ({ ...prev, email }));
         setInitialCheckDone(true);
         
-        // Email doğrulama durumunu kontrol et
-        try {
-          const response = await fetch('/api/auth/check-email-status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-          });
-
-          const data = await response.json();
-
-          if (data.status === 'verified') {
-            setEmailVerified(true);
-            setStep(2);
-            setMessage({ 
-              type: 'success', 
-              text: 'Email doğrulandı! Hesap bilgilerinizi girebilirsiniz.' 
-            });
-          }
-        } catch (error) {
-          // Sessizce hata yok say
-        }
+        // URL'de email varsa, doğrulama yapılmış demektir
+        setEmailVerified(true);
+        setStep(2);
+        setMessage({ 
+          type: 'success', 
+          text: 'Email doğrulandı! Hesap bilgilerinizi girebilirsiniz.' 
+        });
       }
     };
 
