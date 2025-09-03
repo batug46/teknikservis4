@@ -1,11 +1,19 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../../lib/auth';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export async function GET(request) {
   try {
+    // Admin authentication kontrolü
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
+    
     const appointments = await prisma.appointment.findMany({
       orderBy: { date: 'desc' },
       include: {

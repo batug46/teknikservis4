@@ -1,9 +1,17 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../lib/prisma';
 import bcrypt from 'bcryptjs';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../../lib/auth';
 
 export async function GET(request) {
   try {
+    // Admin authentication kontrolü
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
+    
     const users = await prisma.user.findMany({
       orderBy: { id: 'asc' },
     });
@@ -15,6 +23,12 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    // Admin authentication kontrolü
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
+    
     const { email, password, adSoyad, telefon, role } = await request.json();
 
     if (!email || !password || !adSoyad) {

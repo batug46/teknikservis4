@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../lib/prisma';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../../../lib/auth';
 
 // GET: Tüm ürünleri listeler
 export async function GET(request) {
   try {
+    // Admin authentication kontrolü
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
     const products = await prisma.product.findMany({
       orderBy: { id: 'asc' },
     });
@@ -17,6 +24,11 @@ export async function GET(request) {
 // POST: Yeni bir ürün veya hizmet oluşturur
 export async function POST(request) {
   try {
+    // Admin authentication kontrolü
+    const session = await getServerSession(authOptions);
+    if (!session?.user || session.user.role !== 'admin') {
+      return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
     const data = await request.json();
     const { name, description, price, originalPrice, imageUrl, category, stock, isActive, specifications, images, soldCount, viewCount } = data;
 
