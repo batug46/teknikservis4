@@ -177,17 +177,17 @@ export default function Navbar() {
                 </div>
               ) : (
                 <>
-                  <Link href="/login" className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
+                  <Link href="/login" onClick={handleLinkClick} className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
                     <span className="relative z-10">Giriş Yap</span>
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>
                   </Link>
-                  <Link href="/register" className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-600 dark:hover:to-indigo-600 transform hover:scale-105 transition-all duration-150 shadow-lg hover:shadow-xl ease-out">
+                  <Link href="/register" onClick={handleLinkClick} className="px-4 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white hover:from-blue-700 hover:to-indigo-700 dark:hover:from-blue-600 dark:hover:to-indigo-600 transform hover:scale-105 transition-all duration-150 shadow-lg hover:shadow-xl ease-out">
                     Kayıt Ol
                   </Link>
                 </>
               )}
 
-              <Link href="/cart" className="group flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative">
+              <Link href="/cart" onClick={handleLinkClick} className="group flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative">
                 <svg className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform duration-150 ease-out" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
