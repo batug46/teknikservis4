@@ -58,6 +58,15 @@ export default function Navbar() {
     }
   };
 
+  const closeMenus = () => {
+    setIsMenuOpen(false);
+    setIsProfileOpen(false);
+  };
+
+  const handleLinkClick = () => {
+    closeMenus();
+  };
+
   if (!isMounted) {
     return (
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-lg border-b border-gray-200/10">
@@ -95,19 +104,19 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className={`${isMenuOpen ? 'block' : 'hidden'} md:block absolute md:relative top-full md:top-auto left-0 md:left-auto w-full md:w-auto mt-0 md:mt-0 z-40 ${isMenuOpen ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/20 dark:border-gray-700/30 shadow-lg' : ''} md:bg-transparent md:backdrop-blur-0 md:border-0 md:shadow-none`}>
             <div className="flex flex-col md:flex-row md:items-center md:space-x-2 p-4 md:p-0 space-y-2 md:space-y-0">
-              <Link href="/products" className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
+              <Link href="/products" onClick={handleLinkClick} className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
                 <span className="relative z-10">Ürünler</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>
               </Link>
-              <Link href="/book-appointment" className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
+              <Link href="/book-appointment" onClick={handleLinkClick} className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
                 <span className="relative z-10">Randevu Al</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>
               </Link>
-              <Link href="/contact" className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
+              <Link href="/contact" onClick={handleLinkClick} className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
                 <span className="relative z-10">İletişim</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>
               </Link>
-              <Link href="/about" className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
+              <Link href="/about" onClick={handleLinkClick} className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
                 <span className="relative z-10">Hakkımızda</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>
               </Link>
@@ -130,7 +139,7 @@ export default function Navbar() {
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-2 w-64 rounded-xl bg-white dark:bg-gray-800 shadow-2xl border border-gray-200 dark:border-gray-700 p-2 transform transition-all duration-200 ease-out origin-top-right will-change-transform z-[9999]">
                       {session.user.role === 'admin' && (
-                        <Link href="/admin" className="flex items-center px-4 py-3 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-blue-900/30 transition-all duration-150 ease-out rounded-lg cursor-pointer font-semibold opacity-100">
+                        <Link href="/admin" onClick={handleLinkClick} className="flex items-center px-4 py-3 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-blue-900/30 transition-all duration-150 ease-out rounded-lg cursor-pointer font-semibold opacity-100">
                           <svg className="h-5 w-5 mr-3 text-blue-600 dark:text-blue-400 transition-transform duration-150 ease-out" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -138,13 +147,13 @@ export default function Navbar() {
                           <span className="transition-all duration-150 ease-out">Admin Paneli</span>
                         </Link>
                       )}
-                      <Link href="/messages" className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-blue-900/30 transition-all duration-150 ease-out rounded-lg">
+                      <Link href="/messages" onClick={handleLinkClick} className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-blue-900/30 transition-all duration-150 ease-out rounded-lg">
                         <svg className="h-5 w-5 mr-3 text-green-500 dark:text-green-400 transition-all duration-150 ease-out" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                         <span className="transition-all duration-150 ease-out">Mesajlarım</span>
                       </Link>
-                      <Link href="/profile" className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-blue-900/30 transition-all duration-150 ease-out rounded-lg">
+                      <Link href="/profile" onClick={handleLinkClick} className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/80 dark:hover:bg-blue-900/30 transition-all duration-150 ease-out rounded-lg">
                         <svg className="h-5 w-5 mr-3 text-indigo-500 dark:text-indigo-400 transition-all duration-150 ease-out" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
@@ -152,7 +161,10 @@ export default function Navbar() {
                       </Link>
                       <hr className="my-2 border-gray-200/50 dark:border-gray-600/50" />
                       <button
-                        onClick={handleLogout}
+                        onClick={() => {
+                          handleLogout();
+                          closeMenus();
+                        }}
                         className="flex items-center w-full px-4 py-3 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50/80 dark:hover:bg-red-900/30 transition-all duration-150 ease-out rounded-lg"
                       >
                         <svg className="h-5 w-5 mr-3 transition-all duration-150 ease-out" fill="none" viewBox="0 0 24 24" stroke="currentColor">
