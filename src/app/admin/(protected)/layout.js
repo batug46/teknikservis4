@@ -28,9 +28,9 @@ const NavLink = ({ href, children, icon: Icon, onClick }) => {
     <Link 
       href={href} 
       onClick={onClick}
-      className={`flex items-center px-4 py-3 text-gray-200 hover:bg-gray-700 rounded-md transition-colors duration-200 ${isActive ? 'bg-gray-900 text-white' : ''}`}
+      className={`flex items-center px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base text-gray-200 hover:bg-gray-700 rounded-md transition-colors duration-200 ${isActive ? 'bg-gray-900 text-white' : ''}`}
     >
-      <Icon className="w-5 h-5 mr-3" />
+      <Icon className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
       <span>{children}</span>
     </Link>
   );
@@ -54,22 +54,22 @@ export default function ProtectedAdminLayout({ children }) {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-gray-800 text-white flex flex-col p-4 transform transition-transform duration-300 ease-in-out ${
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 sm:w-72 bg-gray-800 text-white flex flex-col p-4 transform transition-transform duration-300 ease-in-out ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
-        <div className="flex items-center justify-between mb-8 border-b border-gray-700 pb-4">
-          <div className="text-2xl font-bold text-center flex-1">
+        <div className="flex items-center justify-between mb-6 sm:mb-8 border-b border-gray-700 pb-3 sm:pb-4">
+          <div className="text-lg sm:text-xl lg:text-2xl font-bold text-center flex-1">
             Admin Paneli
           </div>
           <button
             onClick={closeSidebar}
             className="lg:hidden p-2 hover:bg-gray-700 rounded-md transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
         
-        <nav className="flex flex-col space-y-2 flex-1">
+        <nav className="flex flex-col space-y-1 sm:space-y-2 flex-1">
           <NavLink href="/admin" icon={Home} onClick={closeSidebar}>Dashboard</NavLink>
           <NavLink href="/admin/users" icon={Users} onClick={closeSidebar}>Kullanıcılar</NavLink>
           <NavLink href="/admin/orders" icon={ShoppingCart} onClick={closeSidebar}>Siparişler</NavLink>
@@ -88,18 +88,18 @@ export default function ProtectedAdminLayout({ children }) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <header className="lg:hidden bg-gray-800 text-white p-4 flex items-center justify-between">
+        <header className="lg:hidden bg-gray-800 text-white p-3 sm:p-4 flex items-center justify-between">
           <button
             onClick={() => setIsSidebarOpen(true)}
             className="p-2 hover:bg-gray-700 rounded-md transition-colors"
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
-          <h1 className="text-lg font-semibold">Admin Paneli</h1>
-          <div className="w-10"></div> {/* Spacer for centering */}
+          <h1 className="text-base sm:text-lg font-semibold">Admin Paneli</h1>
+          <div className="w-8 sm:w-10"></div> {/* Spacer for centering */}
         </header>
 
-        <main className="flex-1 p-4 lg:p-8 min-w-0 bg-gray-100 dark:bg-gray-900">
+        <main className="flex-1 p-3 sm:p-4 lg:p-6 xl:p-8 min-w-0 bg-gray-100 dark:bg-gray-900">
           {children}
         </main>
       </div>

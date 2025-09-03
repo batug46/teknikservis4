@@ -510,20 +510,20 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-8">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8 text-white mb-8">
-        <div className="flex items-center space-x-6">
-          <div className="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-            <User className="w-12 h-12" />
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4 sm:p-6 lg:p-8 text-white mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+            <User className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12" />
           </div>
-          <div>
-            <h1 className="text-3xl font-bold">{user?.name || 'Kullanıcı'}</h1>
-            <p className="text-blue-100 flex items-center mt-2">
+          <div className="text-center sm:text-left">
+            <h1 className="text-2xl sm:text-3xl font-bold">{user?.name || 'Kullanıcı'}</h1>
+            <p className="text-blue-100 flex items-center justify-center sm:justify-start mt-2">
               <Mail className="w-4 h-4 mr-2" />
               {user?.email}
             </p>
-            <div className="flex space-x-4 mt-4">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-4">
               <div className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
                 {orders.length} Sipariş
               </div>
@@ -536,28 +536,29 @@ export default function ProfilePage() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex space-x-1 mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+      <div className="flex flex-wrap gap-1 mb-6 sm:mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
         {[
-          { id: 'profile', label: 'Profil Bilgileri', icon: User },
-          { id: 'orders', label: 'Siparişlerim', icon: ShoppingBag },
-          { id: 'returns', label: 'Taleplerim', icon: RefreshCw },
-          { id: 'appointments', label: 'Randevularım', icon: Calendar },
-          { id: 'liked', label: 'Beğendiklerim', icon: Heart },
-          { id: 'settings', label: 'Ayarlar', icon: Settings }
+          { id: 'profile', label: 'Profil Bilgileri', shortLabel: 'Profil', icon: User },
+          { id: 'orders', label: 'Siparişlerim', shortLabel: 'Siparişler', icon: ShoppingBag },
+          { id: 'returns', label: 'Taleplerim', shortLabel: 'Talepler', icon: RefreshCw },
+          { id: 'appointments', label: 'Randevularım', shortLabel: 'Randevular', icon: Calendar },
+          { id: 'liked', label: 'Beğendiklerim', shortLabel: 'Beğeniler', icon: Heart },
+          { id: 'settings', label: 'Ayarlar', shortLabel: 'Ayarlar', icon: Settings }
         ].map((tab) => {
           const Icon = tab.icon;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center px-4 py-2 rounded-md font-medium transition-colors ${
+              className={`flex items-center px-2 sm:px-4 py-2 rounded-md font-medium transition-colors text-xs sm:text-sm ${
                 activeTab === tab.id
                   ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
-              <Icon className="w-4 h-4 mr-2" />
-              {tab.label}
+              <Icon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.shortLabel}</span>
             </button>
           );
         })}
@@ -566,43 +567,43 @@ export default function ProfilePage() {
       <MessageAlert message={message} />
 
       {/* Tab Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         {activeTab === 'profile' && (
           <>
             {/* Profil Bilgileri */}
             <div className="lg:col-span-1">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-6 flex items-center">
-                  <User className="w-5 h-5 mr-2 text-blue-600" />
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white mb-4 sm:mb-6 flex items-center">
+                  <User className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
                   Profil Bilgileri
                 </h2>
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center space-x-3">
-                    <User className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                    <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                     <div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Ad Soyad</div>
-                      <div className="font-medium text-gray-900 dark:text-white">{user?.name || 'Belirtilmemiş'}</div>
+                      <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Ad Soyad</div>
+                      <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">{user?.name || 'Belirtilmemiş'}</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Mail className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                    <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                     <div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">E-posta</div>
-                      <div className="font-medium text-gray-900 dark:text-white">{user?.email || 'Belirtilmemiş'}</div>
+                      <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">E-posta</div>
+                      <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">{user?.email || 'Belirtilmemiş'}</div>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Phone className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                    <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500" />
                     <div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Telefon</div>
-                      <div className="font-medium text-gray-900 dark:text-white">{user?.phone || 'Belirtilmemiş'}</div>
+                      <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Telefon</div>
+                      <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">{user?.phone || 'Belirtilmemiş'}</div>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <MapPin className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-1" />
+                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500 mt-1" />
                     <div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Adres</div>
-                      <div className="font-medium text-gray-900 dark:text-white">{user?.address || 'Belirtilmemiş'}</div>
+                      <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Adres</div>
+                      <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">{user?.address || 'Belirtilmemiş'}</div>
                     </div>
                   </div>
                 </div>
@@ -611,42 +612,44 @@ export default function ProfilePage() {
 
             {/* İstatistikler */}
             <div className="lg:col-span-2">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
-                  <ShoppingBag className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">{orders.length}</div>
-                  <div className="text-gray-600 dark:text-gray-300">Toplam Sipariş</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 text-center">
+                  <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-blue-600 mx-auto mb-3 sm:mb-4" />
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{orders.length}</div>
+                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Toplam Sipariş</div>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
-                  <Calendar className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">{appointments.length}</div>
-                  <div className="text-gray-600 dark:text-gray-300">Toplam Randevu</div>
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 text-center">
+                  <Calendar className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-green-600 mx-auto mb-3 sm:mb-4" />
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{appointments.length}</div>
+                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Toplam Randevu</div>
                 </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
-                  <Award className="w-12 h-12 text-yellow-600 mx-auto mb-4" />
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 text-center sm:col-span-2 lg:col-span-1">
+                  <Award className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-yellow-600 mx-auto mb-3 sm:mb-4" />
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                     {orders.reduce((total, order) => total + order.items.filter(item => item.rating).length, 0)}
                   </div>
-                  <div className="text-gray-600 dark:text-gray-300">Puanlanan Ürün</div>
+                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Puanlanan Ürün</div>
                 </div>
               </div>
 
               {/* Son Aktiviteler */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Son Aktiviteler</h3>
-                <div className="space-y-4">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 dark:text-white mb-4">Son Aktiviteler</h3>
+                <div className="space-y-3 sm:space-y-4">
                   {orders.slice(0, 3).map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div key={order.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-lg space-y-2 sm:space-y-0">
                       <div className="flex items-center space-x-3">
-                        <CreditCard className="w-8 h-8 text-blue-600" />
+                        <CreditCard className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
                         <div>
-                          <div className="font-medium text-gray-900 dark:text-white">Sipariş #{order.id}</div>
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{formatDate(order.createdAt)}</div>
+                          <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">Sipariş #{order.id}</div>
+                          <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{formatDate(order.createdAt)}</div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="font-semibold text-gray-900 dark:text-white">{formatPrice(order.total)} ₺</div>
-                        {getStatusBadge(order.status, 'order')}
+                      <div className="text-left sm:text-right">
+                        <div className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white">{formatPrice(order.total)} ₺</div>
+                        <div className="mt-1">
+                          {getStatusBadge(order.status, 'order')}
+                        </div>
                       </div>
                     </div>
                   ))}
