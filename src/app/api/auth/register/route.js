@@ -2,11 +2,21 @@ import { PrismaClient } from '@prisma/client';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { sanitizeInput, validateEmail, validatePasswordStrength, preventSQLInjection } from '../../../../lib/security';
+import { authRateLimit, getClientIP } from '../../../../lib/rateLimiter';
 
 const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
+    // Rate limiting kontrolü
+    const clientIP = getClientIP(request);
+    if (!authRateLimit(clientIP, 3, 300000)) { // 3 kayıt/5 dakika
+      return NextResponse.json(
+        { error: 'Çok fazla kayıt denemesi. Lütfen 5 dakika bekleyin.' }, 
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const { email, password, name, adSoyad, phone } = body;
 

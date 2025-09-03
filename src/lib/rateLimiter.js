@@ -30,3 +30,18 @@ export function getClientIP(request) {
   
   return cfConnectingIP || realIP || forwarded?.split(',')[0] || 'unknown';
 }
+
+// Admin API'ler için özel rate limiting
+export function adminRateLimit(ip, maxRequests = 20, windowMs = 60000) {
+  return rateLimit(ip, maxRequests, windowMs);
+}
+
+// Public API'ler için rate limiting
+export function publicRateLimit(ip, maxRequests = 100, windowMs = 60000) {
+  return rateLimit(ip, maxRequests, windowMs);
+}
+
+// Auth API'ler için rate limiting
+export function authRateLimit(ip, maxRequests = 5, windowMs = 300000) { // 5 dakika
+  return rateLimit(ip, maxRequests, windowMs);
+}

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../lib/prisma';
 import { Resend } from 'resend';
+import { authRateLimit, getClientIP } from '../../../../lib/rateLimiter';
 import crypto from 'crypto';
 
 // Resend Configuration
@@ -11,6 +12,15 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
+    // Rate limiting kontrolü
+    const clientIP = getClientIP(request);
+    if (!authRateLimit(clientIP, 2, 300000)) { // 2 şifre sıfırlama/5 dakika
+      return NextResponse.json(
+        { error: 'Çok fazla şifre sıfırlama denemesi. Lütfen 5 dakika bekleyin.' }, 
+        { status: 429 }
+      );
+    }
+
     const { email } = await request.json();
 
     if (!email) {
