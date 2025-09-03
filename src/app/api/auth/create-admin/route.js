@@ -6,6 +6,30 @@ const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
+    // Güvenlik kontrolleri
+    const { searchParams } = new URL(request.url);
+    const secretKey = searchParams.get('secret');
+    
+    // Sadece doğru secret key ile çalışsın
+    if (secretKey !== process.env.ADMIN_CREATE_SECRET) {
+      return NextResponse.json(
+        { error: 'Yetkisiz erişim.' },
+        { status: 403 }
+      );
+    }
+
+    // Zaten admin var mı kontrol et
+    const existingAdmin = await prisma.user.findFirst({
+      where: { role: 'admin' }
+    });
+
+    if (existingAdmin) {
+      return NextResponse.json(
+        { error: 'Admin kullanıcısı zaten mevcut.' },
+        { status: 400 }
+      );
+    }
+
     // Admin bilgileri
     const adminData = {
       email: 'admin@teknikservis.com',
@@ -20,11 +44,11 @@ export async function POST(request) {
     const hashedPassword = await bcrypt.hash(adminData.password, 10);
 
     // Önce bu e-posta ile kullanıcı var mı kontrol et
-    const existingAdmin = await prisma.user.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email: adminData.email }
     });
 
-    if (existingAdmin) {
+    if (existingUser) {
       return NextResponse.json(
         { error: 'Bu e-posta adresi zaten kullanımda.' },
         { status: 400 }
