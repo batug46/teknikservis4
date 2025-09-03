@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User, Mail, Lock, Eye, EyeOff, UserPlus, CheckCircle, AlertCircle } from 'lucide-react';
@@ -18,7 +18,45 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [step, setStep] = useState(1); // 1: Email doğrulama, 2: Kayıt
   const [emailVerified, setEmailVerified] = useState(false);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
   const router = useRouter();
+
+  // Sayfa yüklendiğinde email doğrulama durumunu kontrol et
+  useEffect(() => {
+    const checkEmailFromURL = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      
+      if (email && !initialCheckDone) {
+        setFormData(prev => ({ ...prev, email }));
+        setInitialCheckDone(true);
+        
+        // Email doğrulama durumunu kontrol et
+        try {
+          const response = await fetch('/api/auth/check-email-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+          });
+
+          const data = await response.json();
+
+          if (data.status === 'verified') {
+            setEmailVerified(true);
+            setStep(2);
+            setMessage({ 
+              type: 'success', 
+              text: 'Email doğrulandı! Hesap bilgilerinizi girebilirsiniz.' 
+            });
+          }
+        } catch (error) {
+          // Sessizce hata yok say
+        }
+      }
+    };
+
+    checkEmailFromURL();
+  }, [initialCheckDone]);
 
   const handleChange = (e) => {
     setFormData({
@@ -232,13 +270,11 @@ export default function RegisterPage() {
                 </button>
                 
                 {message.type === 'success' && (
-                  <button
-                    type="button"
-                    onClick={checkEmailVerification}
-                    className="w-full flex justify-center py-3 px-4 border border-green-300 rounded-lg shadow-sm text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
-                  >
-                    Email Doğrulandı mı? Kontrol Et
-                  </button>
+                  <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                    <p className="text-blue-700 dark:text-blue-300 text-sm text-center">
+                      📧 Doğrulama emaili gönderildi! Email kutunuzu kontrol edin ve doğrulama linkine tıklayın.
+                    </p>
+                  </div>
                 )}
               </div>
             </form>

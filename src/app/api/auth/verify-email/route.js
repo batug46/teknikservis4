@@ -99,6 +99,11 @@ export async function POST(request) {
       );
     }
 
+    // Önce mevcut doğrulama kaydını sil (yeniden gönder durumu için)
+    await prisma.emailVerification.deleteMany({
+      where: { email }
+    });
+
     // Doğrulama token'ı oluştur
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const tokenExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 dakika

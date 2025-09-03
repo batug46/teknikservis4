@@ -34,7 +34,12 @@ export default function VerifyEmail() {
 
       if (response.ok) {
         setStatus('success');
-        setMessage('Email adresiniz başarıyla doğrulandı! Şimdi hesap bilgilerinizi tamamlayabilirsiniz.');
+        setMessage('Email adresiniz başarıyla doğrulandı! Hesap bilgilerinizi tamamlamak için yönlendiriliyorsunuz...');
+        
+        // 2 saniye sonra kayıt sayfasına yönlendir
+        setTimeout(() => {
+          router.push(`/register?email=${encodeURIComponent(data.email)}`);
+        }, 2000);
       } else {
         setStatus('error');
         setMessage(data.error || 'Doğrulama işlemi başarısız');
@@ -74,12 +79,9 @@ export default function VerifyEmail() {
               <p className="text-gray-600 dark:text-gray-300 mb-6">
                 {message}
               </p>
-              <a
-                href="/register"
-                className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Hesap Bilgilerini Tamamla
-              </a>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Otomatik olarak yönlendiriliyorsunuz...
+              </p>
             </>
           )}
 
