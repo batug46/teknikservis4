@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [step, setStep] = useState(1); // 1: Email doğrulama, 2: Kayıt
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -23,6 +24,42 @@ export default function RegisterPage() {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  const handleEmailVerification = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage({ type: '', text: '' });
+
+    if (!formData.email) {
+      setMessage({ type: 'error', text: 'Email adresi gerekli.' });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setMessage({ 
+          type: 'success', 
+          text: 'Doğrulama emaili gönderildi. Email kutunuzu kontrol edin ve linke tıklayın.' 
+        });
+        setStep(2);
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Bir hata oluştu.' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Bir hata oluştu.' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -91,10 +128,10 @@ export default function RegisterPage() {
             <UserPlus className="h-7 w-7 sm:h-8 sm:w-8 text-white" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-            Hesap Oluştur
+            {step === 1 ? 'Email Doğrulama' : 'Hesap Oluştur'}
           </h2>
           <p className="text-blue-100 text-sm sm:text-base">
-            Hızlı ve güvenli kayıt işlemi
+            {step === 1 ? 'Email adresinizi doğrulayın' : 'Hızlı ve güvenli kayıt işlemi'}
           </p>
         </div>
 
@@ -115,7 +152,39 @@ export default function RegisterPage() {
             </div>
           )}
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          {step === 1 ? (
+            <form className="space-y-6" onSubmit={handleEmailVerification}>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+                  Email Adresi
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="ornek@email.com"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? 'Gönderiliyor...' : 'Doğrulama Emaili Gönder'}
+              </button>
+            </form>
+          ) : (
+            <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Name Field */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-2">
@@ -139,10 +208,10 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Email Field */}
+            {/* Email Field - Readonly */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                E-posta Adresi
+                E-posta Adresi (Doğrulandı)
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -153,12 +222,15 @@ export default function RegisterPage() {
                   name="email"
                   type="email"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  readOnly
+                  className="block w-full pl-10 pr-12 py-3 border border-white/20 rounded-lg bg-white/5 backdrop-blur-sm text-gray-300 cursor-not-allowed"
                   placeholder="ornek@email.com"
                   value={formData.email}
-                  onChange={handleChange}
-                  disabled={loading}
+                  disabled={true}
                 />
+                <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <CheckCircle className="h-5 w-5 text-green-400" />
+                </div>
               </div>
             </div>
 
@@ -264,6 +336,7 @@ export default function RegisterPage() {
               </p>
             </div>
           </form>
+          )}
         </div>
       </div>
     </div>

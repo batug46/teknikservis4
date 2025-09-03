@@ -76,6 +76,31 @@ export async function POST(request) {
       );
     }
 
+    // Email doğrulama kontrolü
+    const emailVerification = await prisma.emailVerification.findUnique({
+      where: { email: sanitizedEmail }
+    });
+
+    if (!emailVerification) {
+      return NextResponse.json(
+        { error: 'Email adresinizi önce doğrulamanız gerekiyor' },
+        { status: 400 }
+      );
+    }
+
+    // Token süresi kontrolü
+    if (emailVerification.expiresAt < new Date()) {
+      // Süresi dolmuş token'ı sil
+      await prisma.emailVerification.delete({
+        where: { email: sanitizedEmail }
+      });
+      
+      return NextResponse.json(
+        { error: 'Doğrulama süresi dolmuş. Lütfen tekrar doğrulama emaili isteyin' },
+        { status: 400 }
+      );
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12); // Increased salt rounds
 
@@ -88,7 +113,13 @@ export async function POST(request) {
         adSoyad: sanitizedAdSoyad,
         phone: sanitizedPhone,
         role: 'user', // Default role
+        emailVerified: true, // Email doğrulandı
       },
+    });
+
+    // Doğrulama kaydını sil
+    await prisma.emailVerification.delete({
+      where: { email: sanitizedEmail }
     });
 
     // Remove password from response
