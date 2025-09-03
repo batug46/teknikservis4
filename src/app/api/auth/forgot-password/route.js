@@ -88,7 +88,7 @@ export async function POST(request) {
     `;
 
     await resend.emails.send({
-      from: 'noreply@tekniverse.xyz',
+      from: 'onboarding@resend.dev', // Geçici test adresi
       to: email,
       subject: 'Password Reset Request - Teknik Servis',
       html: emailHtml,
