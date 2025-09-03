@@ -4,6 +4,9 @@ import { Resend } from 'resend';
 import crypto from 'crypto';
 
 // Resend Configuration
+if (!process.env.RESEND_API_KEY) {
+  console.error('RESEND_API_KEY is not set');
+}
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
@@ -100,8 +103,13 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('Forgot password error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      resendApiKey: process.env.RESEND_API_KEY ? 'Set' : 'Not set'
+    });
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error.message },
       { status: 500 }
     );
   }
