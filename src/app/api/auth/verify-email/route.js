@@ -63,7 +63,7 @@ export async function POST(request) {
   try {
     // Rate limiting kontrolü (Test için esnetildi)
     const clientIP = getClientIP(request);
-    if (!authRateLimit(clientIP, 10, 60000)) { // 10 doğrulama/1 dakika
+    if (!authRateLimit(clientIP, 50, 60000)) { // 50 doğrulama/1 dakika (test için esnetildi)
       return NextResponse.json(
         { error: 'Çok fazla doğrulama denemesi. Lütfen 1 dakika bekleyin.' }, 
         { status: 429 }
@@ -107,7 +107,7 @@ export async function POST(request) {
 
     // Doğrulama token'ı oluştur
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    const tokenExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 dakika
+    const tokenExpiry = new Date(Date.now() + 30 * 60 * 1000); // 30 dakika (test için uzatıldı)
 
     // Geçici doğrulama kaydı oluştur
     await prisma.emailVerification.create({
@@ -135,7 +135,7 @@ export async function POST(request) {
               Email Adresimi Doğrula
             </a>
             <p style="margin-top: 20px; color: #666;">
-              Bu link 15 dakika geçerlidir. Eğer bu işlemi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.
+              Bu link 30 dakika geçerlidir. Eğer bu işlemi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.
             </p>
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
             <p style="color: #999; font-size: 12px;">
