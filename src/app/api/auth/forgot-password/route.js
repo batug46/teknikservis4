@@ -12,11 +12,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
-    // Rate limiting kontrolü
+    // Rate limiting kontrolü (Test için esnetildi)
     const clientIP = getClientIP(request);
-    if (!authRateLimit(clientIP, 2, 300000)) { // 2 şifre sıfırlama/5 dakika
+    if (!authRateLimit(clientIP, 5, 60000)) { // 5 şifre sıfırlama/1 dakika
       return NextResponse.json(
-        { error: 'Çok fazla şifre sıfırlama denemesi. Lütfen 5 dakika bekleyin.' }, 
+        { error: 'Çok fazla şifre sıfırlama denemesi. Lütfen 1 dakika bekleyin.' }, 
         { status: 429 }
       );
     }

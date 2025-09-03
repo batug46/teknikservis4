@@ -8,11 +8,11 @@ const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
-    // Rate limiting kontrolü
+    // Rate limiting kontrolü (Test için esnetildi)
     const clientIP = getClientIP(request);
-    if (!authRateLimit(clientIP, 3, 300000)) { // 3 kayıt/5 dakika
+    if (!authRateLimit(clientIP, 10, 60000)) { // 10 kayıt/1 dakika
       return NextResponse.json(
-        { error: 'Çok fazla kayıt denemesi. Lütfen 5 dakika bekleyin.' }, 
+        { error: 'Çok fazla kayıt denemesi. Lütfen 1 dakika bekleyin.' }, 
         { status: 429 }
       );
     }
