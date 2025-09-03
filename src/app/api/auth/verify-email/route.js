@@ -13,12 +13,21 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // Email token doğrulama fonksiyonu
 async function verifyEmailToken(token) {
   try {
+    console.log('Token doğrulama başlatıldı:', token.substring(0, 10) + '...');
+    
     // Token'ı veritabanında bul
     const emailVerification = await prisma.emailVerification.findUnique({
       where: { token }
     });
 
+    console.log('Token bulundu mu:', !!emailVerification);
+    if (emailVerification) {
+      console.log('Token email:', emailVerification.email);
+      console.log('Token süresi:', emailVerification.expiresAt);
+    }
+
     if (!emailVerification) {
+      console.log('Token bulunamadı');
       return NextResponse.json(
         { error: 'Geçersiz doğrulama tokenı' },
         { status: 400 }
@@ -103,6 +112,15 @@ export async function POST(request) {
     // Önce mevcut doğrulama kaydını sil (yeniden gönder durumu için)
     await prisma.emailVerification.deleteMany({
       where: { email }
+    });
+
+    // Süresi dolmuş tüm token'ları temizle (test için)
+    await prisma.emailVerification.deleteMany({
+      where: {
+        expiresAt: {
+          lt: new Date()
+        }
+      }
     });
 
     // Doğrulama token'ı oluştur
