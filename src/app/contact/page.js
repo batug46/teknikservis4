@@ -78,11 +78,11 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">İletişime Geçin</h1>
-        <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">İletişime Geçin</h1>
+        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto px-4">
           Sorularınız, önerileriniz veya teknik destek talepleriniz için bizimle iletişime geçebilirsiniz. 
           Size en kısa sürede dönüş yapacağız.
         </p>
@@ -90,7 +90,7 @@ export default function ContactPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Contact Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sm:p-8">
           <div className="flex items-center mb-6">
             <MessageSquare className="w-6 h-6 mr-3 text-blue-600" />
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Mesaj Gönder</h2>

@@ -287,10 +287,10 @@ export default function ProductsPage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Header - Küçültülmüş */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-1">Ürünler & Hizmetler</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-1">Ürünler & Hizmetler</h1>
         <p className="text-sm text-gray-600 dark:text-gray-300">Aradığınız ürünü kolayca bulun</p>
       </div>
 
@@ -372,7 +372,7 @@ export default function ProductsPage() {
                     </h2>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {physicalProducts.map(product => (
                       <div key={product.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                         {product.imageUrl && (
@@ -485,7 +485,7 @@ export default function ProductsPage() {
                     </h2>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {serviceProducts.map(service => (
                       <div key={service.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                         {service.imageUrl && (

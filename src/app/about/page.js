@@ -63,23 +63,23 @@ export default function AboutPage() {
           <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-blue-300 rounded-full opacity-25 animate-pulse"></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 py-20">
+        <div className="relative max-w-7xl mx-auto px-4 py-16 sm:py-20">
           <div className="text-center">
             <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-6">
-                <Building className="w-10 h-10" />
+              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full mb-6">
+                <Building className="w-8 h-8 sm:w-10 sm:h-10" />
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight px-4">
                 Efe Bilgisayar ve
                 <br />
                 <span className="text-blue-300">Güvenlik Sistemleri</span>
               </h1>
-              <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
+              <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto px-4">
                 2010 yılından bu yana teknoloji dünyasında güvenilir çözümler sunuyoruz
               </p>
       </div>
 
-            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center text-blue-100">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 justify-center items-center text-blue-100 px-4">
               <div className="flex items-center">
                 <Heart className="w-6 h-6 mr-3 text-blue-300" />
                 <div>

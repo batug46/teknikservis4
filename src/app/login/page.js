@@ -42,10 +42,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center flex-grow py-12">
+    <div className="flex flex-col justify-center items-center flex-grow py-8 sm:py-12 px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8 space-y-6 border border-gray-200 dark:border-gray-700">
-            <h2 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 sm:p-8 space-y-6 border border-gray-200 dark:border-gray-700">
+            <h2 className="text-center text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
               Hesabınıza giriş yapın
             </h2>
           <form className="space-y-6" onSubmit={handleSubmit}>

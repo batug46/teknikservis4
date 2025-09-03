@@ -93,8 +93,8 @@ export default function Navbar() {
           </button>
 
           {/* Desktop Navigation */}
-          <div className={`${isMenuOpen ? 'block' : 'hidden'} md:block absolute md:relative top-full md:top-auto left-0 md:left-auto w-full md:w-auto mt-0 md:mt-0 ${isMenuOpen ? 'bg-white/50 dark:bg-gray-900/50 backdrop-blur-xl border-b border-gray-200/20 dark:border-gray-700/30 shadow-lg' : ''} md:bg-transparent md:backdrop-blur-0 md:border-0 md:shadow-none`}>
-            <div className="flex flex-col md:flex-row md:items-center md:space-x-2 p-4 md:p-0">
+          <div className={`${isMenuOpen ? 'block' : 'hidden'} md:block absolute md:relative top-full md:top-auto left-0 md:left-auto w-full md:w-auto mt-0 md:mt-0 z-40 ${isMenuOpen ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/20 dark:border-gray-700/30 shadow-lg' : ''} md:bg-transparent md:backdrop-blur-0 md:border-0 md:shadow-none`}>
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-2 p-4 md:p-0 space-y-2 md:space-y-0">
               <Link href="/products" className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
                 <span className="relative z-10">Ürünler</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>

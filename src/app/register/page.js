@@ -85,20 +85,20 @@ export default function RegisterPage() {
       {/* Tech Grid Pattern */}
       <div className="absolute inset-0 opacity-30" style={{backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"}}></div>
 
-      <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="relative sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="text-center mb-8">
-          <div className="mx-auto h-16 w-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <UserPlus className="h-8 w-8 text-white" />
+          <div className="mx-auto h-14 w-14 sm:h-16 sm:w-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+            <UserPlus className="h-7 w-7 sm:h-8 sm:w-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
             Hesap Oluştur
           </h2>
-          <p className="text-blue-100">
+          <p className="text-blue-100 text-sm sm:text-base">
             Hızlı ve güvenli kayıt işlemi
           </p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-xl py-8 px-6 shadow-2xl rounded-2xl border border-white/20">
+        <div className="bg-white/10 backdrop-blur-xl py-6 sm:py-8 px-4 sm:px-6 shadow-2xl rounded-2xl border border-white/20">
           {/* Success/Error Messages */}
           {message.text && (
             <div className={`mb-6 p-4 rounded-lg flex items-center space-x-3 ${
