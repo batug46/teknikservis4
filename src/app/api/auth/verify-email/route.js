@@ -121,11 +121,10 @@ export async function POST(request) {
       }
     });
 
-    // Aynı IP'den gelen tüm aktif token'ları temizle (çakışmayı önlemek için)
-    // Bu sayede aynı IP'den sadece 1 aktif token olur
+    // Tüm aktif token'ları temizle (test için - çakışmayı önlemek için)
+    // Bu sayede sadece 1 aktif token olur
     await prisma.emailVerification.deleteMany({
       where: {
-        email: { not: email },
         expiresAt: { gte: new Date() }
       }
     });
