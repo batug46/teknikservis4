@@ -10,6 +10,54 @@ if (!process.env.RESEND_API_KEY) {
 }
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Email token doğrulama fonksiyonu
+async function verifyEmailToken(token) {
+  try {
+    // Token'ı veritabanında bul
+    const emailVerification = await prisma.emailVerification.findUnique({
+      where: { token }
+    });
+
+    if (!emailVerification) {
+      return NextResponse.json(
+        { error: 'Geçersiz doğrulama tokenı' },
+        { status: 400 }
+      );
+    }
+
+    // Token süresi kontrolü
+    if (emailVerification.expiresAt < new Date()) {
+      // Süresi dolmuş token'ı sil
+      await prisma.emailVerification.delete({
+        where: { token }
+      });
+      
+      return NextResponse.json(
+        { error: 'Doğrulama süresi dolmuş. Lütfen tekrar doğrulama emaili isteyin' },
+        { status: 400 }
+      );
+    }
+
+    // Token'ı sil (tek kullanımlık)
+    await prisma.emailVerification.delete({
+      where: { token }
+    });
+
+    return NextResponse.json({
+      message: 'Email başarıyla doğrulandı',
+      email: emailVerification.email
+    });
+
+  } catch (error) {
+    console.error('Token doğrulama hatası:', error);
+    return NextResponse.json(
+      { error: 'Doğrulama işlemi başarısız' },
+      { status: 500 }
+    );
+  }
+}
+
+// Email doğrulama isteği gönder
 export async function POST(request) {
   try {
     // Rate limiting kontrolü
@@ -21,14 +69,14 @@ export async function POST(request) {
       );
     }
 
-    const { email } = await request.json();
+    const { email, token } = await request.json();
 
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email adresi gerekli' },
-        { status: 400 }
-      );
+    // Eğer token varsa, email doğrulama işlemi
+    if (token) {
+      return await verifyEmailToken(token);
     }
+
+    // Eğer email varsa, doğrulama emaili gönder
 
     // Email format kontrolü
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

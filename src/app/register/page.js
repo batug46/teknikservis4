@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [step, setStep] = useState(1); // 1: Email doğrulama, 2: Kayıt
+  const [emailVerified, setEmailVerified] = useState(false);
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -24,6 +25,30 @@ export default function RegisterPage() {
       ...formData,
       [e.target.name]: e.target.value
     });
+  };
+
+  // Email doğrulama kontrolü
+  const checkEmailVerification = async () => {
+    if (!formData.email) return;
+    
+    try {
+      const response = await fetch('/api/auth/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email })
+      });
+
+      if (response.ok) {
+        setEmailVerified(true);
+        setStep(2);
+        setMessage({ 
+          type: 'success', 
+          text: 'Email doğrulandı! Şimdi hesap bilgilerinizi girebilirsiniz.' 
+        });
+      }
+    } catch (error) {
+      // Sessizce hata yok say
+    }
   };
 
   const handleEmailVerification = async (e) => {
@@ -49,9 +74,10 @@ export default function RegisterPage() {
       if (res.ok) {
         setMessage({ 
           type: 'success', 
-          text: 'Doğrulama emaili gönderildi. Email kutunuzu kontrol edin ve linke tıklayın.' 
+          text: 'Doğrulama emaili gönderildi. Email kutunuzu kontrol edin ve linke tıklayın. Doğrulama yaptıktan sonra bu sayfaya geri dönün.' 
         });
-        setStep(2);
+        // 2. adıma geçme - kullanıcı email doğrulamasını yapana kadar beklemeli
+        // setStep(2); // Bu satırı kaldırdık
       } else {
         setMessage({ type: 'error', text: data.error || 'Bir hata oluştu.' });
       }
@@ -175,13 +201,25 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {loading ? 'Gönderiliyor...' : 'Doğrulama Emaili Gönder'}
-              </button>
+              <div className="space-y-3">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {loading ? 'Gönderiliyor...' : 'Doğrulama Emaili Gönder'}
+                </button>
+                
+                {message.type === 'success' && (
+                  <button
+                    type="button"
+                    onClick={checkEmailVerification}
+                    className="w-full flex justify-center py-3 px-4 border border-green-300 rounded-lg shadow-sm text-sm font-medium text-green-700 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
+                  >
+                    Email Doğrulandı mı? Kontrol Et
+                  </button>
+                )}
+              </div>
             </form>
           ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>

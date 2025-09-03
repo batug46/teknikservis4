@@ -76,27 +76,15 @@ export async function POST(request) {
       );
     }
 
-    // Email doğrulama kontrolü
+    // Email doğrulama kontrolü - EmailVerification tablosunda kayıt olmamalı
+    // (çünkü doğrulama yapıldıktan sonra silinir)
     const emailVerification = await prisma.emailVerification.findUnique({
       where: { email: sanitizedEmail }
     });
 
-    if (!emailVerification) {
+    if (emailVerification) {
       return NextResponse.json(
-        { error: 'Email adresinizi önce doğrulamanız gerekiyor' },
-        { status: 400 }
-      );
-    }
-
-    // Token süresi kontrolü
-    if (emailVerification.expiresAt < new Date()) {
-      // Süresi dolmuş token'ı sil
-      await prisma.emailVerification.delete({
-        where: { email: sanitizedEmail }
-      });
-      
-      return NextResponse.json(
-        { error: 'Doğrulama süresi dolmuş. Lütfen tekrar doğrulama emaili isteyin' },
+        { error: 'Email adresinizi önce doğrulamanız gerekiyor. Email kutunuzu kontrol edin.' },
         { status: 400 }
       );
     }
@@ -117,10 +105,7 @@ export async function POST(request) {
       },
     });
 
-    // Doğrulama kaydını sil
-    await prisma.emailVerification.delete({
-      where: { email: sanitizedEmail }
-    });
+    // Doğrulama kaydı zaten silinmiş olmalı (verify-email API'sinde)
 
     // Remove password from response
     const { password: _, ...userWithoutPassword } = user;
