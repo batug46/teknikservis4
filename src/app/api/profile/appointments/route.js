@@ -16,13 +16,13 @@ export async function GET() {
 
     const appointments = await prisma.appointment.findMany({
       where: {
-        userId: session.user.id
+        userId: parseInt(session.user.id)
       },
       include: {
         user: {
-          select: { 
+          select: {
             name: true,
-            email: true 
+            email: true
           },
         },
       },

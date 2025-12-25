@@ -31,14 +31,14 @@ export async function POST(request, { params }) {
     }
 
     // Kullanıcının kendi siparişi mi kontrol et
-    if (order.userId !== session.user.id) {
+    if (order.userId !== parseInt(session.user.id)) {
       return NextResponse.json({ error: 'Bu siparişi iptal etme yetkiniz yok' }, { status: 403 });
     }
 
     // Sipariş durumunu kontrol et - sadece PENDING ve CONFIRMED durumları iptal edilebilir
     if (order.status !== 'PENDING' && order.status !== 'CONFIRMED') {
-      return NextResponse.json({ 
-        error: 'Bu sipariş artık iptal edilemez. Sipariş kargolandıktan sonra iade talebi oluşturabilirsiniz.' 
+      return NextResponse.json({
+        error: 'Bu sipariş artık iptal edilemez. Sipariş kargolandıktan sonra iade talebi oluşturabilirsiniz.'
       }, { status: 400 });
     }
 

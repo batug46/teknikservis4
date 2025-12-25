@@ -3,8 +3,16 @@ import { NextResponse } from 'next/server';
 
 const PROTECTED_EMAIL = 'admin@teknikservis.com';
 
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../../../lib/auth";
+
 // Kullanıcı rolünü güncelle
 export async function PUT(request, { params }) {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== 'admin') {
+        return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
+
     const id = parseInt(params.id, 10);
     if (isNaN(id)) {
         return NextResponse.json({ error: 'Geçersiz kullanıcı ID.' }, { status: 400 });
@@ -47,6 +55,11 @@ export async function PUT(request, { params }) {
 
 // Kullanıcıyı ve ilişkili tüm verilerini sil
 export async function DELETE(request, { params }) {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user.role !== 'admin') {
+        return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
+    }
+
     const id = parseInt(params.id, 10);
     if (isNaN(id)) {
         return NextResponse.json({ error: 'Geçersiz kullanıcı ID.' }, { status: 400 });
@@ -75,30 +88,30 @@ export async function DELETE(request, { params }) {
                     }
                 }
             });
-            
+
             // Sonra Order'ları sil
-            await tx.order.deleteMany({ 
-                where: { userId: id } 
+            await tx.order.deleteMany({
+                where: { userId: id }
             });
-            
+
             // Appointment'ları sil
-            await tx.appointment.deleteMany({ 
-                where: { userId: id } 
+            await tx.appointment.deleteMany({
+                where: { userId: id }
             });
-            
+
             // PrivateMessage'ları sil (hem gönderdiği hem aldığı)
-            await tx.privateMessage.deleteMany({ 
-                where: { 
+            await tx.privateMessage.deleteMany({
+                where: {
                     OR: [
-                        { senderId: id }, 
+                        { senderId: id },
                         { recipientId: id }
-                    ] 
-                } 
+                    ]
+                }
             });
-            
+
             // Son olarak User'ı sil
-            await tx.user.delete({ 
-                where: { id } 
+            await tx.user.delete({
+                where: { id }
             });
         });
 

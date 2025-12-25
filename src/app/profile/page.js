@@ -4,11 +4,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
-import { 
-  User, Mail, Phone, MapPin, Calendar, Clock, Package, 
-  Star, Edit3, Save, X, ShoppingBag, Settings, 
+import {
+  User, Mail, Phone, MapPin, Calendar, Clock, Package,
+  Star, Edit3, Save, X, ShoppingBag, Settings,
   CheckCircle, XCircle, AlertCircle, Eye, RefreshCw,
-  CreditCard, Truck, Award, Heart
+  CreditCard, Truck, Award, Heart, Wrench
 } from 'lucide-react';
 
 // Sayfayı dinamik olarak işaretle
@@ -37,8 +37,13 @@ export default function ProfilePage() {
   const [likedProductsLoading, setLikedProductsLoading] = useState(true);
   const [returns, setReturns] = useState([]);
   const [returnsLoading, setReturnsLoading] = useState(true);
+
+  // Servis Takip State'leri
+  const [services, setServices] = useState([]);
+  const [servicesLoading, setServicesLoading] = useState(true);
+
   const [activeTab, setActiveTab] = useState('profile');
-  
+
   // İade modal state'leri
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [selectedReturnItem, setSelectedReturnItem] = useState(null);
@@ -111,6 +116,21 @@ export default function ProfilePage() {
     }
   }, []);
 
+  const fetchServices = useCallback(async () => {
+    try {
+      setServicesLoading(true);
+      const response = await fetch('/api/profile/services');
+      if (response.ok) {
+        const data = await response.json();
+        setServices(data);
+      }
+    } catch (error) {
+      console.error('Servisler yüklenirken hata:', error);
+    } finally {
+      setServicesLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     if (status === 'authenticated' && session?.user) {
       // Profil bilgilerini getir
@@ -153,6 +173,7 @@ export default function ProfilePage() {
       fetchInitialAppointments();
       fetchLikedProducts();
       fetchReturns();
+      fetchServices();
 
       // Sayfa visibility değiştiğinde veriyi yenile
       const handleVisibilityChange = () => {
@@ -186,7 +207,7 @@ export default function ProfilePage() {
     setMessage({ type: '', text: '' });
 
     try {
-      const response = await fetch('/api/auth/profile', {
+      const response = await fetch('/api/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -204,7 +225,7 @@ export default function ProfilePage() {
       if (response.ok) {
         setUser(prevUser => ({ ...prevUser, name, email, phone, address }));
         setMessage({ type: 'success', text: 'Profil bilgileriniz başarıyla güncellendi.' });
-        
+
         // Şifre alanlarını temizle
         setCurrentPassword('');
         setNewPassword('');
@@ -254,7 +275,7 @@ export default function ProfilePage() {
         if (ordersRes.ok) {
           const ordersData = await ordersRes.json();
           setOrders(ordersData);
-          
+
           if (selectedOrder) {
             const updatedOrder = ordersData.find(o => o.id === selectedOrder.id);
             if (updatedOrder) {
@@ -467,23 +488,23 @@ export default function ProfilePage() {
     if (!message.text) return null;
 
     const alertConfig = {
-      success: { 
-        bg: 'bg-green-50 dark:bg-green-900/20', 
-        border: 'border-green-200 dark:border-green-800', 
-        text: 'text-green-800 dark:text-green-200', 
-        icon: CheckCircle 
+      success: {
+        bg: 'bg-green-50 dark:bg-green-900/20',
+        border: 'border-green-200 dark:border-green-800',
+        text: 'text-green-800 dark:text-green-200',
+        icon: CheckCircle
       },
-      danger: { 
-        bg: 'bg-red-50 dark:bg-red-900/20', 
-        border: 'border-red-200 dark:border-red-800', 
-        text: 'text-red-800 dark:text-red-200', 
-        icon: XCircle 
+      danger: {
+        bg: 'bg-red-50 dark:bg-red-900/20',
+        border: 'border-red-200 dark:border-red-800',
+        text: 'text-red-800 dark:text-red-200',
+        icon: XCircle
       },
-      warning: { 
-        bg: 'bg-yellow-50 dark:bg-yellow-900/20', 
-        border: 'border-yellow-200 dark:border-yellow-800', 
-        text: 'text-yellow-800 dark:text-yellow-200', 
-        icon: AlertCircle 
+      warning: {
+        bg: 'bg-yellow-50 dark:bg-yellow-900/20',
+        border: 'border-yellow-200 dark:border-yellow-800',
+        text: 'text-yellow-800 dark:text-yellow-200',
+        icon: AlertCircle
       }
     };
 
@@ -543,6 +564,7 @@ export default function ProfilePage() {
           { id: 'returns', label: 'Taleplerim', shortLabel: 'Talepler', icon: RefreshCw },
           { id: 'appointments', label: 'Randevularım', shortLabel: 'Randevular', icon: Calendar },
           { id: 'liked', label: 'Beğendiklerim', shortLabel: 'Beğeniler', icon: Heart },
+          { id: 'services', label: 'Servis İşlemlerim', shortLabel: 'Servis', icon: Wrench },
           { id: 'settings', label: 'Ayarlar', shortLabel: 'Ayarlar', icon: Settings }
         ].map((tab) => {
           const Icon = tab.icon;
@@ -550,11 +572,10 @@ export default function ProfilePage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center px-2 sm:px-4 py-2 rounded-md font-medium transition-colors text-xs sm:text-sm ${
-                activeTab === tab.id
-                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-              }`}
+              className={`flex items-center px-2 sm:px-4 py-2 rounded-md font-medium transition-colors text-xs sm:text-sm ${activeTab === tab.id
+                ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                }`}
             >
               <Icon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">{tab.label}</span>
@@ -668,7 +689,7 @@ export default function ProfilePage() {
                   Siparişlerim ({orders.length})
                 </h2>
               </div>
-              
+
               {orders.length === 0 ? (
                 <div className="text-center py-12">
                   <ShoppingBag className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
@@ -784,7 +805,7 @@ export default function ProfilePage() {
                   İade Taleplerim ({returns.length})
                 </h2>
               </div>
-              
+
               {returnsLoading ? (
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -829,8 +850,8 @@ export default function ProfilePage() {
                         <div>
                           <h4 className="font-medium text-gray-900 dark:text-white mb-2">İade Türü</h4>
                           <p className="text-gray-700 dark:text-gray-300">
-                            {returnItem.returnType === 'REFUND' ? 'Para İadesi' : 
-                             returnItem.returnType === 'EXCHANGE' ? 'Ürün Değişimi' : 'Kredi'}
+                            {returnItem.returnType === 'REFUND' ? 'Para İadesi' :
+                              returnItem.returnType === 'EXCHANGE' ? 'Ürün Değişimi' : 'Kredi'}
                           </p>
                         </div>
                       </div>
@@ -912,6 +933,88 @@ export default function ProfilePage() {
           </div>
         )}
 
+        {activeTab === 'services' && (
+          <div className="lg:col-span-3">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
+                  <Wrench className="w-5 h-5 mr-2 text-blue-600" />
+                  Servis İşlemlerim ({services.length})
+                </h2>
+              </div>
+
+              {servicesLoading ? (
+                <div className="text-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                  <p className="text-gray-500 dark:text-gray-400">Servis kayıtları yükleniyor...</p>
+                </div>
+              ) : services.length === 0 ? (
+                <div className="text-center py-12">
+                  <Wrench className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz servis kaydınız yok</h3>
+                  <p className="text-gray-500 dark:text-gray-400">Arızalı cihazlarınız için servis kaydı oluşturabilirsiniz.</p>
+                </div>
+              ) : (
+                <div className="grid gap-6 p-6">
+                  {services.map((service) => (
+                    <div key={service.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                            {service.brand} {service.model}
+                          </h3>
+                          <div className="flex items-center text-gray-500 dark:text-gray-400 mt-2 space-x-4">
+                            <span className="flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs">
+                              <Package className="w-3 h-3 mr-1" />
+                              {service.trackingCode}
+                            </span>
+                            <span className="flex items-center">
+                              <Calendar className="w-4 h-4 mr-1" />
+                              {formatDate(service.createdAt)}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-2">
+                          {/* Status Badge Custom Logic or Reuse */}
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+                            {service.status}
+                          </span>
+                          <Link href={`/takip?code=${service.trackingCode}`} className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            Detayları Gör &rarr;
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Cihaz Türü</h4>
+                          <p className="text-gray-700 dark:text-gray-300 text-sm">{service.deviceType}</p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Arıza</h4>
+                          <p className="text-gray-700 dark:text-gray-300 text-sm">{service.problem}</p>
+                        </div>
+                        {service.estimatedCost && (
+                          <div>
+                            <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Tahmini Tutar</h4>
+                            <p className="text-gray-700 dark:text-gray-300 text-sm">{formatPrice(service.estimatedCost)} ₺</p>
+                          </div>
+                        )}
+                        {service.finalCost && (
+                          <div>
+                            <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Sonuç Tutarı</h4>
+                            <p className="font-bold text-blue-600 dark:text-blue-400 text-sm">{formatPrice(service.finalCost)} ₺</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {activeTab === 'appointments' && (
           <div className="lg:col-span-3">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
@@ -921,7 +1024,7 @@ export default function ProfilePage() {
                   Randevularım ({appointments.length})
                 </h2>
               </div>
-              
+
               {appointments.length === 0 ? (
                 <div className="text-center py-12">
                   <Calendar className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
@@ -989,7 +1092,7 @@ export default function ProfilePage() {
                   Beğendiğim Ürünler ({likedProducts.length})
                 </h2>
               </div>
-              
+
               {likedProductsLoading ? (
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
@@ -1018,21 +1121,20 @@ export default function ProfilePage() {
                           </div>
                         )}
                       </div>
-                      
+
                       <div className="space-y-2">
                         <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{product.name}</h3>
                         <p className="text-gray-600 dark:text-gray-400 text-xs line-clamp-2">{product.description}</p>
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-bold text-gray-900 dark:text-white">{formatPrice(product.price)} ₺</span>
-                          <span className={`px-2 py-1 text-xs rounded-full ${
-                            product.stock > 0 
-                              ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200' 
-                              : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200'
-                          }`}>
+                          <span className={`px-2 py-1 text-xs rounded-full ${product.stock > 0
+                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
+                            : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200'
+                            }`}>
                             {product.stock > 0 ? `Stokta (${product.stock})` : 'Stokta Yok'}
                           </span>
                         </div>
-                        
+
                         <div className="flex space-x-2">
                           <Link
                             href={`/products/${product.id}`}
@@ -1166,29 +1268,28 @@ export default function ProfilePage() {
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Ürün Puanlama</h3>
-                <button 
+                <button
                   onClick={() => setShowRatingModal(false)}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              
+
               <div className="mb-6">
                 <p className="text-gray-700 mb-4">
                   <strong>{selectedItem.product.name}</strong> için puanınızı verin:
                 </p>
-                
+
                 <div className="flex justify-center space-x-2">
                   {[1, 2, 3, 4, 5].map((value) => (
                     <button
                       key={value}
                       onClick={() => setRating(value.toString())}
-                      className={`w-12 h-12 rounded-full border-2 font-semibold transition-colors ${
-                        rating === value.toString()
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'border-gray-300 text-gray-600 hover:border-blue-400'
-                      }`}
+                      className={`w-12 h-12 rounded-full border-2 font-semibold transition-colors ${rating === value.toString()
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'border-gray-300 text-gray-600 hover:border-blue-400'
+                        }`}
                     >
                       {value}
                     </button>
@@ -1229,7 +1330,7 @@ export default function ProfilePage() {
                   {formatDate(selectedAppointment.date)} - {selectedAppointment.time}
                 </div>
               </div>
-              
+
               <div className="space-y-6">
                 {/* Randevu Durumu */}
                 <div>
@@ -1268,7 +1369,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse mt-6">
               <button
                 type="button"
@@ -1298,7 +1399,7 @@ export default function ProfilePage() {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              
+
               <div className="space-y-6">
                 {/* Ürün Bilgileri */}
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
@@ -1369,7 +1470,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse mt-6">
               <button
                 type="button"
@@ -1407,7 +1508,7 @@ export default function ProfilePage() {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              
+
               <div className="space-y-6">
                 {/* Sipariş Bilgileri */}
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
@@ -1478,8 +1579,8 @@ export default function ProfilePage() {
                       </h3>
                       <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
                         <p>
-                          {selectedCancelItem 
-                            ? 'Ürün iptal işlemi geri alınamaz. İptal etmek istediğinizden emin misiniz?' 
+                          {selectedCancelItem
+                            ? 'Ürün iptal işlemi geri alınamaz. İptal etmek istediğinizden emin misiniz?'
                             : 'Sipariş iptal işlemi geri alınamaz. İptal etmek istediğinizden emin misiniz?'
                           }
                         </p>
@@ -1489,7 +1590,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse mt-6">
               <button
                 type="button"

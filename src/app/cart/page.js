@@ -17,21 +17,21 @@ export default function CartPage() {
   useEffect(() => {
     const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
     setCart(cartData);
-    
+
     // Stok bilgilerini getir
     const fetchStockInfo = async () => {
       try {
         const productIds = cartData.map(item => item.id);
         if (productIds.length === 0) return;
-        
+
         const res = await fetch('/api/admin/products');
         const products = await res.json();
-        
+
         const stockData = {};
         products.forEach(product => {
           stockData[product.id] = product.stock;
         });
-        
+
         setStockInfo(stockData);
       } catch (error) {
         console.error('Stok bilgileri alınamadı:', error);
@@ -49,13 +49,13 @@ export default function CartPage() {
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) return;
-    
+
     // Stok kontrolü
     const availableStock = stockInfo[productId];
     if (availableStock !== undefined && newQuantity > availableStock) {
-      setMessage({ 
-        type: 'warning', 
-        text: `Üzgünüz, bu ürün için yalnızca ${availableStock} adet stok mevcut.` 
+      setMessage({
+        type: 'warning',
+        text: `Üzgünüz, bu ürün için yalnızca ${availableStock} adet stok mevcut.`
       });
       return;
     }
@@ -95,10 +95,10 @@ export default function CartPage() {
         }
         throw new Error(data.error || 'Sipariş oluşturulamadı.');
       }
-      
+
       // Sepeti temizle
       updateCart([]);
-      
+
       // Başarı sayfasına yönlendir
       router.push(`/order-success?orderId=${data.id}`);
 
@@ -124,23 +124,23 @@ export default function CartPage() {
     if (!message.text) return null;
 
     const alertConfig = {
-      warning: { 
-        bg: 'bg-yellow-50 dark:bg-yellow-900/20', 
-        border: 'border-yellow-200 dark:border-yellow-800', 
-        text: 'text-yellow-800 dark:text-yellow-200', 
-        icon: AlertTriangle 
+      warning: {
+        bg: 'bg-yellow-50 dark:bg-yellow-900/20',
+        border: 'border-yellow-200 dark:border-yellow-800',
+        text: 'text-yellow-800 dark:text-yellow-200',
+        icon: AlertTriangle
       },
-      danger: { 
-        bg: 'bg-red-50 dark:bg-red-900/20', 
-        border: 'border-red-200 dark:border-red-800', 
-        text: 'text-red-800 dark:text-red-200', 
-        icon: AlertTriangle 
+      danger: {
+        bg: 'bg-red-50 dark:bg-red-900/20',
+        border: 'border-red-200 dark:border-red-800',
+        text: 'text-red-800 dark:text-red-200',
+        icon: AlertTriangle
       },
-      success: { 
-        bg: 'bg-green-50 dark:bg-green-900/20', 
-        border: 'border-green-200 dark:border-green-800', 
-        text: 'text-green-800 dark:text-green-200', 
-        icon: CheckCircle 
+      success: {
+        bg: 'bg-green-50 dark:bg-green-900/20',
+        border: 'border-green-200 dark:border-green-800',
+        text: 'text-green-800 dark:text-green-200',
+        icon: CheckCircle
       }
     };
 
@@ -170,7 +170,7 @@ export default function CartPage() {
           <p className="text-gray-600 dark:text-gray-300 mb-8">
             Henüz sepetinizde ürün bulunmamaktadır. Alışverişe başlamak için ürünlerimize göz atın.
           </p>
-          <Link 
+          <Link
             href="/products"
             className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
@@ -193,7 +193,7 @@ export default function CartPage() {
             {cart.length} ürün
           </span>
         </div>
-        <Link 
+        <Link
           href="/products"
           className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
         >
@@ -211,75 +211,77 @@ export default function CartPage() {
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Sepet Ürünleri</h2>
             </div>
-            
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
-              {cart.map((item) => (
-                <div key={item.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                  <div className="flex items-center space-x-4">
-                    {/* Product Image Placeholder */}
-                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center">
-                      {item.imageUrl ? (
-                        <img 
-                          src={item.imageUrl} 
-                          alt={item.name}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      ) : (
-                        <Package className="w-8 h-8 text-gray-400 dark:text-gray-500" />
-                      )}
-                    </div>
 
-                    {/* Product Info */}
-                    <div className="flex-1">
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-white">{item.name}</h3>
-                      <p className="text-gray-600 dark:text-gray-300">{formatPrice(item.price)} ₺</p>
-                      {stockInfo[item.id] !== undefined && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-1">
-                          <CheckCircle className="w-4 h-4 mr-1 text-green-500" />
-                          Stokta: {stockInfo[item.id]} adet
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Quantity Controls */}
-                    <div className="flex items-center space-x-3">
-                      <button
-                        className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 flex items-center justify-center transition-colors"
-                        onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
-                      >
-                        <Minus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                      </button>
-                      
-                      <span className="w-12 text-center font-medium text-gray-900 dark:text-white">{item.quantity}</span>
-                      
-                      <button
-                        className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                        disabled={stockInfo[item.id] !== undefined && item.quantity >= stockInfo[item.id]}
-                      >
-                        <Plus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                      </button>
-                    </div>
-
-                    {/* Item Total */}
-                    <div className="text-right">
-                      <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                        {formatPrice(item.price * item.quantity)} ₺
+            <div className="overflow-x-auto">
+              <div className="divide-y divide-gray-200 dark:divide-gray-700 min-w-[600px]">
+                {cart.map((item) => (
+                  <div key={item.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <div className="flex items-center space-x-4">
+                      {/* Product Image Placeholder */}
+                      <div className="w-20 h-20 bg-gray-100 dark:bg-gray-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        {item.imageUrl ? (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.name}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        ) : (
+                          <Package className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                        )}
                       </div>
-                    </div>
 
-                    {/* Remove Button */}
-                    <button
-                      className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                      onClick={() => removeFromCart(item.id)}
-                      title="Sepetten Kaldır"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                      {/* Product Info */}
+                      <div className="flex-1">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-white">{item.name}</h3>
+                        <p className="text-gray-600 dark:text-gray-300">{formatPrice(item.price)} ₺</p>
+                        {stockInfo[item.id] !== undefined && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center mt-1">
+                            <CheckCircle className="w-4 h-4 mr-1 text-green-500" />
+                            Stokta: {stockInfo[item.id]} adet
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Quantity Controls */}
+                      <div className="flex items-center space-x-3">
+                        <button
+                          className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 flex items-center justify-center transition-colors"
+                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                        </button>
+
+                        <span className="w-12 text-center font-medium text-gray-900 dark:text-white">{item.quantity}</span>
+
+                        <button
+                          className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                          disabled={stockInfo[item.id] !== undefined && item.quantity >= stockInfo[item.id]}
+                        >
+                          <Plus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                        </button>
+                      </div>
+
+                      {/* Item Total */}
+                      <div className="text-right w-24">
+                        <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {formatPrice(item.price * item.quantity)} ₺
+                        </div>
+                      </div>
+
+                      {/* Remove Button */}
+                      <button
+                        className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                        onClick={() => removeFromCart(item.id)}
+                        title="Sepetten Kaldır"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -288,7 +290,7 @@ export default function CartPage() {
         <div className="lg:col-span-1">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 sticky top-6">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-6">Sipariş Özeti</h2>
-            
+
             <div className="space-y-4 mb-6">
               <div className="flex justify-between text-gray-600 dark:text-gray-300">
                 <span>Ara Toplam ({cart.length} ürün)</span>

@@ -11,9 +11,21 @@ export async function GET(request) {
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
     }
-    
+
     const users = await prisma.user.findMany({
       orderBy: { id: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        adSoyad: true,
+        email: true,
+        phone: true,
+        role: true,
+        address: true,
+        emailVerified: true,
+        createdAt: true,
+        // Password hariç diğer gerekli alanları ekledik
+      }
     });
     return NextResponse.json(users);
   } catch (error) {
@@ -28,7 +40,7 @@ export async function POST(request) {
     if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
     }
-    
+
     const { email, password, adSoyad, telefon, role } = await request.json();
 
     if (!email || !password || !adSoyad) {

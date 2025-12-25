@@ -43,7 +43,7 @@ function BookAppointmentForm() {
         const data = await res.json();
         const serviceProducts = data.filter(product => product.category === 'hizmet');
         setServices(serviceProducts);
-        
+
         const urlService = searchParams.get('service');
         if (urlService && serviceProducts.some(service => service.name === urlService)) {
           setFormData(prev => ({ ...prev, serviceType: urlService }));
@@ -86,7 +86,7 @@ function BookAppointmentForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Form validasyonu
     if (!formData.serviceType || !formData.date || !formData.time || !formData.phone || !formData.address) {
       setError('Lütfen tüm gerekli alanları doldurun.');
@@ -108,7 +108,7 @@ function BookAppointmentForm() {
       if (!res.ok) {
         throw new Error(data.error || 'Randevu oluşturulamadı.');
       }
-      
+
       setSuccess('Randevunuz başarıyla oluşturuldu!');
       setFormData({ serviceType: '', description: '', date: '', time: '', phone: '', address: '' });
 
@@ -133,20 +133,7 @@ function BookAppointmentForm() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      {/* Simple Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
-      </div>
-
-      {/* Tech Grid Pattern */}
-      <div className="absolute inset-0 opacity-30" style={{
-        backgroundImage: "url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%239C92AC%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
-        backgroundSize: '60px 60px'
-      }}></div>
-
+    <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="relative sm:mx-auto sm:w-full sm:max-w-4xl">
         <div className="text-center mb-8">
           <div className="mx-auto h-16 w-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
@@ -162,7 +149,7 @@ function BookAppointmentForm() {
           </p>
         </div>
 
-        <div className="bg-white/10 backdrop-blur-xl py-8 px-6 shadow-2xl rounded-2xl border border-white/20">
+        <div className="bg-slate-800/90 py-8 px-6 shadow-lg rounded-2xl border border-gray-700 will-change-transform">
           {/* Success/Error Messages */}
           {error && (
             <div className="mb-6 p-4 rounded-lg flex items-center space-x-3 bg-red-500/20 border border-red-400/30 text-red-100">
@@ -172,7 +159,7 @@ function BookAppointmentForm() {
               <span className="text-sm font-medium">{error}</span>
             </div>
           )}
-          
+
           {success && (
             <div className="mb-6 p-4 rounded-lg flex items-center space-x-3 bg-green-500/20 border border-green-400/30 text-green-100">
               <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -188,20 +175,20 @@ function BookAppointmentForm() {
               <label htmlFor="serviceType" className="block text-sm font-medium text-gray-200 mb-2">
                 Servis Tipi
               </label>
-                             <select
-                 id="serviceType"
-                 value={formData.serviceType}
-                 onChange={handleChange}
-                 required
-                 className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-               >
-                 <option value="" className="text-gray-900">Seçiniz...</option>
-                 {services.map(service => (
-                   <option key={service.id} value={service.name} className="text-gray-900">
-                     {service.name}
-                   </option>
-                 ))}
-               </select>
+              <select
+                id="serviceType"
+                value={formData.serviceType}
+                onChange={handleChange}
+                required
+                className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              >
+                <option value="" className="text-gray-900">Seçiniz...</option>
+                {services.map(service => (
+                  <option key={service.id} value={service.name} className="text-gray-900">
+                    {service.name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Description */}
@@ -215,7 +202,7 @@ function BookAppointmentForm() {
                 onChange={handleChange}
                 rows={4}
                 placeholder="Varsa özel notlarınızı buraya yazabilirsiniz..."
-                className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
               />
             </div>
 
@@ -231,7 +218,7 @@ function BookAppointmentForm() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                   placeholder="Telefon numaranızı girin"
                 />
               </div>
@@ -246,7 +233,7 @@ function BookAppointmentForm() {
                   onChange={handleChange}
                   required
                   rows={3}
-                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
                   placeholder="Adresinizi girin"
                 />
               </div>
@@ -265,7 +252,7 @@ function BookAppointmentForm() {
                   onChange={handleChange}
                   required
                   min={new Date().toISOString().split('T')[0]}
-                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 />
               </div>
 
@@ -273,29 +260,29 @@ function BookAppointmentForm() {
                 <label htmlFor="time" className="block text-sm font-medium text-gray-200 mb-2">
                   Randevu Saati
                 </label>
-                                 <select
-                   id="time"
-                   value={formData.time}
-                   onChange={handleChange}
-                   required
-                   className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                 >
-                   <option value="" className="text-gray-900">Seçiniz...</option>
-                   {timeSlots.map(time => {
-                     const slotCount = availableSlots[time] || 0;
-                     const isAvailable = slotCount < 2;
-                     return (
-                       <option
-                         key={time}
-                         value={time}
-                         disabled={!isAvailable}
-                         className={!isAvailable ? 'text-gray-400' : 'text-gray-900'}
-                       >
-                         {time} {!isAvailable ? '(Dolu)' : ''}
-                       </option>
-                     );
-                   })}
-                 </select>
+                <select
+                  id="time"
+                  value={formData.time}
+                  onChange={handleChange}
+                  required
+                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                >
+                  <option value="" className="text-gray-900">Seçiniz...</option>
+                  {timeSlots.map(time => {
+                    const slotCount = availableSlots[time] || 0;
+                    const isAvailable = slotCount < 2;
+                    return (
+                      <option
+                        key={time}
+                        value={time}
+                        disabled={!isAvailable}
+                        className={!isAvailable ? 'text-gray-400' : 'text-gray-900'}
+                      >
+                        {time} {!isAvailable ? '(Dolu)' : ''}
+                      </option>
+                    );
+                  })}
+                </select>
               </div>
             </div>
 
@@ -330,9 +317,9 @@ function BookAppointmentForm() {
 
 function LoadingState() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white/10 backdrop-blur-xl py-8 px-6 shadow-2xl rounded-2xl border border-white/20">
+        <div className="bg-slate-800/90 py-8 px-6 shadow-lg rounded-2xl border border-gray-700">
           <div className="flex flex-col items-center justify-center">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
               <svg className="h-8 w-8 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">

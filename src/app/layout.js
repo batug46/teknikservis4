@@ -5,8 +5,36 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../lib/auth';
 
 export const metadata = {
-  title: 'Efe Bilgisayar ve Güvenlik Sistemleri',
-  description: 'Bilgisayar tamiri, güvenlik kamerası sistemleri ve teknik servis hizmetleri',
+  title: 'Efe Bilgisayar ve Güvenlik Sistemleri | Profesyonel Teknik Servis',
+  description: 'İstanbul bilgisayar tamiri, güvenlik kamerası kurulumu, alarm sistemleri ve kurumsal teknik servis hizmetleri. Hızlı, güvenilir ve garantili çözümler.',
+  keywords: ['bilgisayar tamiri', 'teknik servis', 'güvenlik kamerası', 'alarm sistemleri', 'format atma', 'veri kurtarma', 'notebook tamiri', 'kamera kurulumu', 'istanbul bilgisayarcı'],
+  authors: [{ name: 'Efe Bilgisayar' }],
+  creator: 'Efe Bilgisayar',
+  publisher: 'Efe Bilgisayar',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'Efe Bilgisayar ve Güvenlik Sistemleri',
+    description: 'Profesyonel bilgisayar teknik servisi ve güvenlik sistemleri çözümleri.',
+    url: 'https://tekniverse.xyz',
+    siteName: 'Efe Bilgisayar',
+    locale: 'tr_TR',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export const viewport = {

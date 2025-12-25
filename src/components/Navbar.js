@@ -17,7 +17,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setIsMounted(true);
-    
+
     const handleStorageChange = () => {
       try {
         const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -33,7 +33,7 @@ export default function Navbar() {
     };
 
     handleStorageChange();
-    
+
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('scroll', handleScroll);
 
@@ -45,9 +45,9 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await signOut({ 
+      await signOut({
         redirect: false,
-        callbackUrl: '/' 
+        callbackUrl: '/'
       });
       localStorage.removeItem('cart');
       setCartCount(0);
@@ -80,11 +80,10 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-      isScrolled 
-        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg border-b border-gray-200/20 dark:border-gray-700/30' 
-        : 'bg-white/40 dark:bg-gray-900/40 backdrop-blur-lg border-b border-gray-200/10 dark:border-gray-700/20'
-    }`}>
+    <nav className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-200 ${isScrolled
+      ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg border-b border-gray-200/20 dark:border-gray-700/30'
+      : 'bg-white/40 dark:bg-gray-900/40 backdrop-blur-lg border-b border-gray-200/10 dark:border-gray-700/20'
+      }`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           <Link href="/" className="text-xl font-bold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
@@ -118,6 +117,10 @@ export default function Navbar() {
               </Link>
               <Link href="/about" onClick={handleLinkClick} className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
                 <span className="relative z-10">Hakkımızda</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>
+              </Link>
+              <Link href="/takip" onClick={handleLinkClick} className="group px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm transition-all duration-150 ease-out relative overflow-hidden">
+                <span className="relative z-10">Cihaz Takip</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 dark:from-blue-400/10 dark:to-indigo-400/10 scale-x-0 group-hover:scale-x-100 transition-transform duration-150 origin-left ease-out"></div>
               </Link>
 

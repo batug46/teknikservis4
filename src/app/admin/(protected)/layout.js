@@ -16,7 +16,9 @@ import {
   Star,
   Menu,
   X,
-  RefreshCw
+  RefreshCw,
+  Search,
+  Settings
 } from 'lucide-react';
 import AdminLogoutButton from '../../../components/AdminLogoutButton';
 
@@ -25,8 +27,8 @@ const NavLink = ({ href, children, icon: Icon, onClick }) => {
   const isActive = pathname === href;
 
   return (
-    <Link 
-      href={href} 
+    <Link
+      href={href}
       onClick={onClick}
       className={`flex items-center px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base text-gray-200 hover:bg-gray-700 rounded-md transition-colors duration-200 ${isActive ? 'bg-gray-900 text-white' : ''}`}
     >
@@ -47,16 +49,15 @@ export default function ProtectedAdminLayout({ children }) {
     <div className="flex min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Mobile Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={closeSidebar}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 sm:w-72 bg-gray-800 text-white flex flex-col p-4 transform transition-transform duration-300 ease-in-out ${
-        isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-      }`}>
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 sm:w-72 bg-gray-800 text-white flex flex-col p-4 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}>
         <div className="flex items-center justify-between mb-6 sm:mb-8 border-b border-gray-700 pb-3 sm:pb-4">
           <div className="text-lg sm:text-xl lg:text-2xl font-bold text-center flex-1">
             Admin Paneli
@@ -68,7 +69,7 @@ export default function ProtectedAdminLayout({ children }) {
             <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </div>
-        
+
         <nav className="flex flex-col space-y-1 sm:space-y-2 flex-1">
           <NavLink href="/admin" icon={Home} onClick={closeSidebar}>Dashboard</NavLink>
           <NavLink href="/admin/users" icon={Users} onClick={closeSidebar}>Kullanıcılar</NavLink>
@@ -78,8 +79,10 @@ export default function ProtectedAdminLayout({ children }) {
           <NavLink href="/admin/contact" icon={Contact} onClick={closeSidebar}>İletişim Mesajları</NavLink>
           <NavLink href="/admin/slider" icon={LayoutTemplate} onClick={closeSidebar}>Slider Yönetimi</NavLink>
           <NavLink href="/admin/products" icon={Package} onClick={closeSidebar}>Ürün Yönetimi</NavLink>
+          <NavLink href="/admin/service-tracking" icon={Search} onClick={closeSidebar}>Cihaz Takip</NavLink>
+          <NavLink href="/admin/site-settings" icon={Settings} onClick={closeSidebar}>Site İçerik Ayarları</NavLink>
         </nav>
-        
+
         <div className="mt-auto">
           <AdminLogoutButton />
         </div>

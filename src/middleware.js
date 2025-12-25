@@ -9,13 +9,13 @@ export default withAuth(
     // CORS headers ekle
     const response = NextResponse.next();
     const origin = req.headers.get('origin');
-    
+
     if (origin) {
       const allowedOrigins = [
         'http://localhost:3000',
         process.env.NEXTAUTH_URL || 'https://your-domain.vercel.app'
       ];
-      
+
       if (allowedOrigins.includes(origin)) {
         response.headers.set('Access-Control-Allow-Origin', origin);
         response.headers.set('Access-Control-Allow-Credentials', 'true');
@@ -51,8 +51,8 @@ export default withAuth(
           return !!token;
         }
 
-        // Admin sayfaları için yetkilendirme
-        if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+        // Admin sayfaları ve API rotaları için yetkilendirme
+        if ((pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) && !pathname.startsWith('/admin/login')) {
           return token?.role === 'admin';
         }
 
@@ -64,5 +64,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ['/admin/:path*', '/profile/:path*', '/messages/:path*'],
+  matcher: ['/admin/:path*', '/profile/:path*', '/messages/:path*', '/api/admin/:path*'],
 };

@@ -5,6 +5,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../../lib/auth';
 import { addSecurityHeaders } from '../../../../lib/securityHeaders';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // Admin authentication kontrolü
@@ -17,7 +19,7 @@ export async function GET() {
       prisma.product.count(),
       prisma.order.count(),
     ]);
-    
+
     const response = NextResponse.json({ totalUsers, totalProducts, totalOrders });
     return addSecurityHeaders(response);
   } catch (error) {

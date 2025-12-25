@@ -1,295 +1,274 @@
-import React from 'react';
-import { 
-  Shield, Users, Award, Clock, Target, Eye, Laptop, Camera, 
-  ShieldCheck, Monitor, Zap, CheckCircle, Star, TrendingUp,
-  Building, Heart, Globe, ArrowRight
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import {
+  Shield, Users, Clock, Monitor, Laptop, Camera, ShieldCheck,
+  CheckCircle, Heart, Globe, Building, ArrowRight, Zap, Target, Star, Award
 } from 'lucide-react';
 
 export default function AboutPage() {
+  const [settings, setSettings] = useState({});
+
+  useEffect(() => {
+    fetch('/api/site-settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && !data.error) setSettings(data);
+      })
+      .catch(err => console.error(err));
+  }, []);
+
   const services = [
-    {
-      icon: Laptop,
-      title: "Bilgisayar ve Notebook Tamiri",
-      description: "Tüm marka ve modellerde profesyonel tamir hizmeti"
-    },
-    {
-      icon: Camera,
-      title: "Güvenlik Kamera Sistemleri", 
-      description: "IP kameralar, analog sistemler ve görüntü analizi"
-    },
-    {
-      icon: ShieldCheck,
-      title: "Alarm Sistemleri",
-      description: "Kablosuz alarm, sensörler ve akıllı güvenlik çözümleri"
-    },
-    {
-      icon: Monitor,
-      title: "Donanım ve Yazılım Çözümleri",
-      description: "Sistem kurulumu, konfigürasyon ve optimizasyon"
-    }
+    { title: settings.service_1_title, desc: settings.service_1_desc, icon: Laptop },
+    { title: settings.service_2_title, desc: settings.service_2_desc, icon: Camera },
+    { title: settings.service_3_title, desc: settings.service_3_desc, icon: ShieldCheck },
+    { title: settings.service_4_title, desc: settings.service_4_desc, icon: Monitor },
   ];
 
   const advantages = [
-    {
-      icon: Clock,
-      title: "13 Yıllık Deneyim",
-      description: "Sektörde edindiğimiz tecrübe ile en zorlu problemlere bile çözüm üretiyoruz.",
-      color: "bg-blue-100 dark:bg-blue-900/30 text-blue-600"
-    },
-    {
-      icon: Users,
-      title: "Uzman Ekip", 
-      description: "Alanında uzman teknisyenlerimizle profesyonel hizmet sunuyoruz.",
-      color: "bg-green-100 dark:bg-green-900/30 text-green-600"
-    },
-    {
-      icon: Award,
-      title: "Kalite Garantisi",
-      description: "Tüm hizmetlerimizde müşteri memnuniyetini garanti ediyoruz.",
-      color: "bg-purple-100 dark:bg-purple-900/30 text-purple-600"
-    }
+    { title: settings.advantage_1_title, desc: settings.advantage_1_desc, icon: Clock, color: "text-blue-500" },
+    { title: settings.advantage_2_title, desc: settings.advantage_2_desc, icon: Users, color: "text-green-500" },
+    { title: settings.advantage_3_title, desc: settings.advantage_3_desc, icon: Award, color: "text-purple-500" },
   ];
 
-
-
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
-        <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-blue-400 rounded-full opacity-20 animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-16 h-16 bg-purple-400 rounded-full opacity-30 animate-bounce"></div>
-          <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-blue-300 rounded-full opacity-25 animate-pulse"></div>
-        </div>
-        
-        <div className="relative max-w-7xl mx-auto px-4 py-16 sm:py-20">
-          <div className="text-center">
-            <div className="mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full mb-6">
-                <Building className="w-8 h-8 sm:w-10 sm:h-10" />
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight px-4">
-                Efe Bilgisayar ve
-                <br />
-                <span className="text-blue-300">Güvenlik Sistemleri</span>
-              </h1>
-              <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto px-4">
-                2010 yılından bu yana teknoloji dünyasında güvenilir çözümler sunuyoruz
-              </p>
-      </div>
+    <div className="min-h-screen bg-[#0B1120] text-gray-300 font-sans">
 
-            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 justify-center items-center text-blue-100 px-4">
-              <div className="flex items-center">
-                <Heart className="w-6 h-6 mr-3 text-blue-300" />
-                <div>
-                  <div className="font-semibold text-white">Güvenilir Hizmet</div>
-                  <div className="text-sm">13 yıldır kesintisiz</div>
-                </div>
+      {/* 1. Hero Section */}
+      <section className="relative bg-gradient-to-b from-[#1e3a8a] to-[#0B1120] pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden text-center">
+        {/* Arka plan daireleri */}
+        <div className="absolute top-20 left-10 w-24 h-24 bg-blue-500 rounded-full opacity-10 blur-xl"></div>
+        <div className="absolute bottom-40 right-10 w-32 h-32 bg-purple-600 rounded-full opacity-10 blur-xl"></div>
+
+        <div className="max-w-4xl mx-auto px-4 relative z-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-2xl mb-8 backdrop-blur-sm border border-white/10 shadow-lg shadow-blue-900/50">
+            <Building className="w-8 h-8 text-blue-300" />
+          </div>
+
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+            Efe Bilgisayar ve <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-200 to-white">
+              Güvenlik Sistemleri
+            </span>
+          </h1>
+
+          <p className="text-lg md:text-xl text-blue-100/80 mb-12 max-w-2xl mx-auto font-light">
+            2010 yılından bu yana teknoloji dünyasında güvenilir çözümler sunuyoruz.
+          </p>
+
+          {/* Hero Altı İkonlar Şeridi */}
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-6 md:gap-16 border-t border-white/10 pt-10 px-4">
+            <div className="flex items-center justify-center sm:justify-start">
+              <Heart className="w-5 h-5 text-blue-400 mr-3" />
+              <div className="text-left">
+                <div className="text-white font-bold text-sm">{settings.hero_card_1_title || "Güvenilir Hizmet"}</div>
+                <div className="text-xs text-gray-400">{settings.hero_card_1_desc || "13 yıllık tecrübe"}</div>
               </div>
-              <div className="flex items-center">
-                <Globe className="w-6 h-6 mr-3 text-blue-300" />
-                <div>
-                  <div className="font-semibold text-white">Geniş Hizmet Ağı</div>
-                  <div className="text-sm">Ankara genelinde</div>
-                </div>
+            </div>
+            <div className="flex items-center justify-center sm:justify-start">
+              <Globe className="w-5 h-5 text-blue-400 mr-3" />
+              <div className="text-left">
+                <div className="text-white font-bold text-sm">{settings.hero_card_2_title || "Geniş Hizmet Ağı"}</div>
+                <div className="text-xs text-gray-400">{settings.hero_card_2_desc || "Ankara genelinde"}</div>
               </div>
-              <div className="flex items-center">
-                <Shield className="w-6 h-6 mr-3 text-blue-300" />
-                <div>
-                  <div className="font-semibold text-white">Kalite Garantisi</div>
-                  <div className="text-sm">%100 müşteri memnuniyeti</div>
-                </div>
+            </div>
+            <div className="flex items-center justify-center sm:justify-start">
+              <Shield className="w-5 h-5 text-blue-400 mr-3" />
+              <div className="text-left">
+                <div className="text-white font-bold text-sm">{settings.hero_card_3_title || "Kalite Garantisi"}</div>
+                <div className="text-xs text-gray-400">{settings.hero_card_3_desc || "%100 müşteri memnuniyeti"}</div>
               </div>
-        </div>
+            </div>
           </div>
         </div>
       </section>
 
-
-
-            {/* About Us Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      {/* 2. Orta Bölüm: Hakkımızda & Hizmetler Kartı */}
+      <section className="py-12 md:py-20 relative">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-start">
+
+            {/* Sol: Metin */}
             <div>
-              <div className="mb-8">
-                <span className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
-                  Hakkımızda
-                </span>
-                <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                  Teknolojide Güvenilir Ortağınız
-                </h2>
-                <p className="text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                  Efe Bilgisayar ve Güvenlik Sistemleri olarak, 2010 yılından bu yana teknoloji dünyasında güvenilir çözümler sunuyoruz.
-                </p>
-                <p className="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-                  Bilgisayar tamiri, güvenlik sistemleri kurulumu ve teknolojik danışmanlık alanlarında uzman ekibimizle, müşterilerimize en kaliteli hizmeti sunmayı hedefliyoruz. Her projede en yüksek standartları koruyarak, müşteri memnuniyetini ön planda tutuyoruz.
-                </p>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-4">
-                      <Star className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 dark:text-white">Müşteri Memnuniyeti</div>
-                      <div className="text-gray-600 dark:text-gray-300">%98 memnuniyet oranı</div>
-                    </div>
+              <span className="inline-block py-1 px-3 rounded-full bg-blue-900/30 text-blue-400 text-xs font-bold uppercase tracking-wider mb-4 border border-blue-800">
+                Hakkımızda
+              </span>
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-6">
+                {settings.about_title || "Teknolojide Güvenilir Ortağınız"}
+              </h2>
+              <p className="text-gray-400 leading-relaxed whitespace-pre-line mb-8 text-base md:text-lg">
+                {settings.about_content || "..."}
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+                <div className="flex items-center bg-[#1E293B] p-4 rounded-xl border border-gray-800 min-w-[200px]">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center mr-4">
+                    <Star className="w-5 h-5 text-blue-500" />
                   </div>
-                  <div className="flex items-center">
-                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mr-4">
-                      <CheckCircle className="w-6 h-6 text-green-600" />
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 dark:text-white">Hızlı Çözüm</div>
-                      <div className="text-gray-600 dark:text-gray-300">24 saat içinde yanıt</div>
-                    </div>
+                  <div>
+                    <div className="text-white font-bold text-sm">Müşteri Memnuniyeti</div>
+                    <div className="text-xs text-gray-400">%98 memnuniyet oranı</div>
+                  </div>
+                </div>
+                <div className="flex items-center bg-[#1E293B] p-4 rounded-xl border border-gray-800 min-w-[200px]">
+                  <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center mr-4">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  </div>
+                  <div>
+                    <div className="text-white font-bold text-sm">Hızlı Çözüm</div>
+                    <div className="text-xs text-gray-400">24 saat içinde yanıt</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="relative">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-                <h3 className="text-2xl font-bold mb-6">Hizmetlerimiz</h3>
-                <div className="space-y-6">
-                  {services.map((service, index) => {
-                    const Icon = service.icon;
-                    return (
-                      <div key={index} className="flex items-start space-x-4">
-                        <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-6 h-6" />
-                        </div>
-                  <div>
-                          <h4 className="font-semibold mb-1">{service.title}</h4>
-                          <p className="text-blue-100 text-sm">{service.description}</p>
-                        </div>
-                  </div>
-                    );
-                  })}
-                </div>
+            {/* Sağ: Hizmetlerimiz Kartı (Gradient) */}
+            <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+
+              <h3 className="text-2xl font-bold mb-8">Hizmetlerimiz</h3>
+              <div className="space-y-6">
+                {services.map((service, idx) => {
+                  const Icon = service.icon;
+                  let title = service.title || "Hizmet";
+                  let desc = service.desc || "Hizmet açıklaması";
+
+                  return (
+                    <div key={idx} className="flex items-start">
+                      <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center mr-4 flex-shrink-0 backdrop-blur-sm">
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-base md:text-lg mb-1">{title}</h4>
+                        <p className="text-blue-100 text-sm opacity-80 leading-snug">{desc}</p>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      {/* 3. Neden Bizi Tercih Etmelisiniz (Koyu Gri Şerit) */}
+      <section className="py-16 md:py-24 bg-[#111827]">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="text-center mb-12 md:mb-16">
+            <span className="inline-block py-1 px-3 rounded-full bg-blue-900/30 text-blue-400 text-xs font-bold uppercase tracking-wider mb-4 border border-blue-800">
               Avantajlarımız
             </span>
-            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Neden Bizi Tercih Etmelisiniz?
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Sektörde edindiğimiz deneyim ve uzman ekibimizle size en iyi hizmeti sunuyoruz
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Neden Bizi Tercih Etmelisiniz?</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
+              Sektörde edindiğimiz deneyim ve uzman ekibimizle size en iyi hizmeti sunuyoruz.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {advantages.map((advantage, index) => {
-              const Icon = advantage.icon;
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {advantages.map((adv, idx) => {
+              const Icon = adv.icon;
               return (
-                <div key={index} className="group">
-                  <div className="bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 text-center group-hover:-translate-y-2">
-                    <div className={`w-16 h-16 ${advantage.color} dark:bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-6`}>
-                      <Icon className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{advantage.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{advantage.description}</p>
+                <div key={idx} className="bg-[#1F2937] p-6 md:p-8 rounded-2xl border border-gray-800 text-center hover:border-blue-500/30 transition-colors group">
+                  <div className="w-14 h-14 md:w-16 md:h-16 mx-auto bg-[#374151] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Icon className={`w-7 h-7 md:w-8 md:h-8 ${adv.color}`} />
                   </div>
+                  <h3 className="text-lg md:text-xl font-bold text-white mb-3">{adv.title || "..."}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    {adv.desc || "..."}
+                  </p>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
       </section>
 
-      {/* Mission & Vision Section */}
-      <section className="py-20 bg-gray-900 text-white">
+      {/* 4. Misyon & Vizyon (Görseldeki Renkli Kartlar) */}
+      <section className="py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="inline-block bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="text-center mb-10 md:mb-12">
+            <span className="inline-block py-1 px-3 rounded-full bg-blue-900/30 text-blue-400 text-xs font-bold uppercase tracking-wider mb-4 border border-blue-800">
               Değerlerimiz
             </span>
-            <h2 className="text-4xl font-bold mb-6">Misyonumuz ve Vizyonumuz</h2>
-      </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-white">Misyonumuz ve Vizyonumuz</h2>
+          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Mission */}
-            <div className="relative">
-              <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-8 rounded-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {/* Misyon Kartı (Mavi) */}
+            <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-8 md:p-10 rounded-3xl relative overflow-hidden">
+              <div className="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10">
+                <Target className="w-32 h-32 md:w-48 md:h-48 text-white" />
+              </div>
+              <div className="relative z-10">
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-4">
-                    <Target className="w-6 h-6" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4 backdrop-blur-sm">
+                    <Target className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold">Misyonumuz</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-white">Misyonumuz</h3>
                 </div>
-                <p className="text-blue-100 leading-relaxed text-lg">
-                    Müşterilerimize en yüksek kalitede teknolojik çözümler sunarak, güvenlik ve bilişim ihtiyaçlarını en iyi şekilde karşılamak. Her zaman güncel teknolojileri takip ederek, en iyi hizmeti en uygun fiyatlarla sunmak.
-                  </p>
-                <div className="mt-6 flex items-center text-blue-200">
-                  <TrendingUp className="w-5 h-5 mr-2" />
-                  <span className="text-sm">Sürekli gelişim ve iyileştirme</span>
-                </div>
+                <p className="text-blue-100 leading-relaxed text-base md:text-lg">
+                  {settings.mission_content || "..."}
+                </p>
               </div>
             </div>
 
-            {/* Vision */}
-            <div className="relative">
-              <div className="bg-gradient-to-br from-purple-600 to-purple-800 p-8 rounded-2xl">
+            {/* Vizyon Kartı (Mor) */}
+            <div className="bg-gradient-to-br from-purple-600 to-purple-800 p-8 md:p-10 rounded-3xl relative overflow-hidden">
+              <div className="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10">
+                <Globe className="w-32 h-32 md:w-48 md:h-48 text-white" />
+              </div>
+              <div className="relative z-10">
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-4">
-                    <Eye className="w-6 h-6" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4 backdrop-blur-sm">
+                    <Globe className="w-5 h-5 md:w-6 md:h-6 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold">Vizyonumuz</h3>
+                  <h3 className="text-xl md:text-2xl font-bold text-white">Vizyonumuz</h3>
                 </div>
-                <p className="text-purple-100 leading-relaxed text-lg">
-                    Bölgemizde teknoloji ve güvenlik sistemleri alanında lider firma olmak. Sürekli gelişen teknolojiye ayak uydurarak, müşterilerimize en yenilikçi çözümleri sunmak ve sektörde örnek gösterilen bir kuruluş haline gelmek.
-                  </p>
-                <div className="mt-6 flex items-center text-purple-200">
-                  <Zap className="w-5 h-5 mr-2" />
-                  <span className="text-sm">İnovasyon ve liderlik</span>
-                </div>
+                <p className="text-purple-100 leading-relaxed text-base md:text-lg">
+                  {settings.vision_content || "..."}
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-6">
-            Teknoloji İhtiyaçlarınız İçin Bize Ulaşın
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Uzman ekibimizle projelerinizi hayata geçirmeye hazırız. 
-            Size en uygun çözümü birlikte bulalım.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <Shield className="w-12 h-12 mx-auto mb-4 text-blue-200" />
-              <h3 className="text-xl font-semibold mb-2">Güvenilir Servis</h3>
-              <p className="text-blue-100">Tüm hizmetlerimizde kalite garantisi</p>
+      {/* 5. Alt Bant (İkonlu) - Call to Action */}
+      <section className="py-12 md:py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 md:p-16 text-center shadow-2xl relative overflow-hidden">
+            <div className="relative z-10">
+              <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">Teknoloji İhtiyaçlarınız İçin Bize Ulaşın</h2>
+              <p className="text-blue-100 mb-8 md:mb-12 max-w-2xl mx-auto opacity-90 text-sm md:text-base">
+                Uzman ekibimizle projelerinizi hayata geçirmeye hazırız. Size en uygun çözümü birlikte bulalım.
+              </p>
+
+              <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12">
+                <div className="flex flex-col items-center">
+                  <ShieldCheck className="w-8 h-8 md:w-10 md:h-10 text-white mb-3" />
+                  <div className="text-white font-bold text-base md:text-lg">Güvenilir Servis</div>
+                  <div className="text-blue-200 text-xs">Tüm hizmetlerimizde kalite garantisi</div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Users className="w-8 h-8 md:w-10 md:h-10 text-white mb-3" />
+                  <div className="text-white font-bold text-base md:text-lg">Uzman Ekip</div>
+                  <div className="text-blue-200 text-xs">Alanında deneyimli teknisyenler</div>
+                </div>
+                <div className="flex flex-col items-center">
+                  <Clock className="w-8 h-8 md:w-10 md:h-10 text-white mb-3" />
+                  <div className="text-white font-bold text-base md:text-lg">Hızlı Çözüm</div>
+                  <div className="text-blue-200 text-xs">En kısa sürede probleminizi çözüyoruz</div>
+                </div>
+              </div>
             </div>
-            <div>
-              <Users className="w-12 h-12 mx-auto mb-4 text-blue-200" />
-              <h3 className="text-xl font-semibold mb-2">Uzman Ekip</h3>
-              <p className="text-blue-100">Alanında deneyimli teknisyenler</p>
-            </div>
-            <div>
-              <Clock className="w-12 h-12 mx-auto mb-4 text-blue-200" />
-              <h3 className="text-xl font-semibold mb-2">Hızlı Çözüm</h3>
-              <p className="text-blue-100">En kısa sürede probleminizi çözüyoruz</p>
+            {/* Dekoratif Efektler */}
+            <div className="absolute top-0 left-0 w-80 h-80 bg-white opacity-10 rounded-full -ml-20 -mt-20"></div>
+            <div className="absolute bottom-0 right-0 w-80 h-80 bg-purple-900 opacity-20 rounded-full -mr-20 -mb-20"></div>
           </div>
         </div>
-      </div>
       </section>
+
     </div>
   );
-} 
+}

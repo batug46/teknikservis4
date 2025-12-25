@@ -41,14 +41,14 @@ export default function ServicesPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const url = editingService 
+      const url = editingService
         ? `/api/admin/services/${editingService.id}`
         : '/api/admin/services';
-      
+
       const method = editingService ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: {
@@ -153,7 +153,7 @@ export default function ServicesPage() {
         </button>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
@@ -193,8 +193,8 @@ export default function ServicesPage() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {service.imageUrl ? (
-                    <img 
-                      src={service.imageUrl} 
+                    <img
+                      src={service.imageUrl}
                       alt={service.title}
                       className="h-12 w-12 object-cover rounded"
                     />
@@ -207,11 +207,10 @@ export default function ServicesPage() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <button
                     onClick={() => toggleActive(service.id, service.isActive)}
-                    className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${
-                      service.isActive 
-                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-900/50' 
+                    className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${service.isActive
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 hover:bg-green-200 dark:hover:bg-green-900/50'
                         : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-900/50'
-                    }`}
+                      }`}
                   >
                     {service.isActive ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
                     {service.isActive ? 'Aktif' : 'Pasif'}
@@ -247,7 +246,7 @@ export default function ServicesPage() {
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                 {editingService ? 'Hizmet Düzenle' : 'Yeni Hizmet Ekle'}
               </h3>
-              
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -257,12 +256,12 @@ export default function ServicesPage() {
                     <input
                       type="text"
                       value={formData.title}
-                      onChange={(e) => setFormData({...formData, title: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                       required
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Sıra
@@ -270,7 +269,7 @@ export default function ServicesPage() {
                     <input
                       type="number"
                       value={formData.order}
-                      onChange={(e) => setFormData({...formData, order: parseInt(e.target.value)})}
+                      onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                       required
                     />
@@ -283,7 +282,7 @@ export default function ServicesPage() {
                   </label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     required
@@ -297,7 +296,7 @@ export default function ServicesPage() {
                   <input
                     type="url"
                     value={formData.imageUrl}
-                    onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     placeholder="https://example.com/image.jpg"
                   />
@@ -313,7 +312,7 @@ export default function ServicesPage() {
                   <input
                     type="text"
                     value={formData.linkUrl}
-                    onChange={(e) => setFormData({...formData, linkUrl: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, linkUrl: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     placeholder="/products?category=bilgisayar-tamiri"
                     required
@@ -325,7 +324,7 @@ export default function ServicesPage() {
                     type="checkbox"
                     id="isActive"
                     checked={formData.isActive}
-                    onChange={(e) => setFormData({...formData, isActive: e.target.checked})}
+                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                     className="h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500 dark:bg-gray-700"
                   />
                   <label htmlFor="isActive" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">

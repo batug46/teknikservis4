@@ -1,10 +1,11 @@
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("POSTGRES_URL")
+  url      = env("DATABASE_URL")
 }
 
 model Order {
@@ -45,6 +46,7 @@ model User {
   likedProducts    LikedProduct[]
   reviews          ProductReview[]
   returns          Return[]
+  serviceRecords   ServiceTracking[]
 }
 
 model Product {
@@ -122,6 +124,16 @@ model Page {
   updatedAt DateTime @updatedAt
 }
 
+// YENİ MODEL: Site Ayarları
+model SiteSettings {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique // Ayar anahtarı (örn: 'contact_address')
+  value       String   // Ayar değeri (örn: 'Örnek Mah. No:1')
+  description String?  // Admin için açıklama
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Slider {
   id        Int      @id @default(autoincrement())
   title     String
@@ -158,10 +170,6 @@ model ServiceRecord {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
-
-
-
-
 
 model PrivateMessage {
   id          Int      @id @default(autoincrement())
@@ -281,4 +289,57 @@ model EmailVerification {
   token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+// Cihaz Takip Sistemi Modeli
+model ServiceTracking {
+  id           Int      @id @default(autoincrement())
+  trackingCode String   @unique // Müşterinin gireceği kod (Örn: TK-123456)
+  
+  // Müşteri Bilgileri
+  customerName String
+  customerPhone String
+  customerEmail String?
+  
+  // Cihaz Bilgileri
+  deviceType   String   // Laptop, Masaüstü, Telefon...
+  brand        String
+  model        String
+  serialNumber String?
+  
+  // Arıza Bilgileri
+  problem      String   // Arıza tanımı
+  accessories  String?  // Yanında gelenler (Çanta, Şarj aleti)
+  
+  // İlişkiler
+  userId       Int?
+  user         User?    @relation(fields: [userId], references: [id])
+  
+  // İptal Bilgileri
+  cancellationReason String? // Müşteri iptal talep ettiyse nedeni
+
+  // İşlem Bilgileri
+  status       ServiceStatus @default(RECEIVED)
+  description  String?  // Yapılan işlemler (Müşteri görebilir)
+  diagnosis    String?  // Teknik Tespit (Admin tarafından girilen)
+  adminNotes   String?  // Admin notları (Gizli)
+  estimatedCost Decimal? @db.Decimal(10, 2) // Tahmini ücret
+  finalCost    Decimal? @db.Decimal(10, 2) // Sonuç ücreti
+  
+  completedAt  DateTime? // Tamamlanma tarihi
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum ServiceStatus {
+  RECEIVED          // Teslim Alındı
+  DIAGNOSING        // Arıza Tespiti Yapılıyor
+  PENDING_APPROVAL  // Müşteri Onayı Bekliyor
+  IN_PROGRESS       // İşlemde / Tamir Ediliyor
+  WAITING_PARTS     // Yedek Parça Bekleniyor
+  COMPLETED         // Tamamlandı
+  READY             // Teslime Hazır
+  DELIVERED         // Teslim Edildi
+  CANCELLED         // İptal Edildi
+  UNREPAIRABLE      // Tamir Edilemedi
 }

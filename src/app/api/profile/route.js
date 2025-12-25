@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs';
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user) {
       return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
     }
@@ -45,18 +45,18 @@ export async function PUT(request) {
     if (!userPayload) return NextResponse.json({ error: 'Yetkisiz erişim.' }, { status: 401 });
 
     const { name, email, phone, address, currentPassword, newPassword } = await request.json();
-    
+
     const updateData = { name, adSoyad: name, email, phone, address };
 
     if (email && email !== userPayload.email) {
       const existingUser = await prisma.user.findUnique({ where: { email } });
       if (existingUser) {
-          return NextResponse.json({ error: 'Bu e-posta adresi zaten kullanımda.' }, { status: 400 });
+        return NextResponse.json({ error: 'Bu e-posta adresi zaten kullanımda.' }, { status: 400 });
       }
     }
 
     if (newPassword && currentPassword) {
-      const user = await prisma.user.findUnique({ where: { id: userPayload.id } });
+      const user = await prisma.user.findUnique({ where: { id: parseInt(userPayload.id) } });
       if (!user) return NextResponse.json({ error: 'Kullanıcı bulunamadı.' }, { status: 404 });
       const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
       if (!isPasswordValid) return NextResponse.json({ error: 'Mevcut şifreniz yanlış.' }, { status: 400 });
@@ -64,7 +64,7 @@ export async function PUT(request) {
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: userPayload.id },
+      where: { id: parseInt(userPayload.id) },
       data: updateData,
     });
     const { password: _, ...userWithoutPassword } = updatedUser;
