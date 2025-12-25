@@ -22,6 +22,44 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Servis tipi, tarih, saat, telefon ve adres alanları zorunludur.' }, { status: 400 });
     }
 
+    // ✅ GÜVENLİK: Input sanitization ve validation
+    const sanitizeString = (str, maxLength = 500) => {
+      if (typeof str !== 'string') return '';
+      return str.trim().slice(0, maxLength);
+    };
+
+    // Tarih validasyonu
+    const appointmentDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (isNaN(appointmentDate.getTime())) {
+      return NextResponse.json({ error: 'Geçersiz tarih formatı.' }, { status: 400 });
+    }
+
+    if (appointmentDate < today) {
+      return NextResponse.json({
+        error: 'Geçmiş tarih için randevu oluşturamazsınız.'
+      }, { status: 400 });
+    }
+
+    // Saat validasyonu
+    const validTimeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00'];
+    if (!validTimeSlots.includes(time)) {
+      return NextResponse.json({
+        error: 'Geçersiz saat dilimi. Lütfen belirlenen saatlerden birini seçin.'
+      }, { status: 400 });
+    }
+
+    // Telefon numarası validasyonu (Türkiye formatı)
+    const phoneRegex = /^[0-9]{10,11}$/;
+    const cleanPhone = phone.replace(/\s|-|\(|\)/g, '');
+    if (!phoneRegex.test(cleanPhone)) {
+      return NextResponse.json({
+        error: 'Geçersiz telefon numarası. 10-11 haneli bir numara girin.'
+      }, { status: 400 });
+    }
+
     // Aynı tarih ve saatteki randevu sayısını kontrol et
     const existingAppointments = await prisma.appointment.count({
       where: {
@@ -34,20 +72,20 @@ export async function POST(request) {
     });
 
     if (existingAppointments >= MAX_APPOINTMENTS_PER_SLOT) {
-      return NextResponse.json({ 
-        error: 'Bu saat dilimi için randevu kontenjanı dolu. Lütfen başka bir saat seçiniz.' 
+      return NextResponse.json({
+        error: 'Bu saat dilimi için randevu kontenjanı dolu. Lütfen başka bir saat seçiniz.'
       }, { status: 400 });
     }
 
     const newAppointment = await prisma.appointment.create({
       data: {
         userId: session.user.id,
-        serviceType,
-        description: description || '', // Boşsa boş string olarak kaydet
-        date: new Date(date),
-        time,
-        phone,
-        address,
+        serviceType: sanitizeString(serviceType, 200),
+        description: sanitizeString(description || '', 1000),
+        date: appointmentDate, // Validated date
+        time, // Validated time
+        phone: cleanPhone, // Sanitized phone
+        address: sanitizeString(address, 500),
         status: 'PENDING',
       },
     });

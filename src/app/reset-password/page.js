@@ -18,7 +18,7 @@ export default function ResetPassword() {
     if (tokenParam) {
       setToken(tokenParam);
     } else {
-      setError('Invalid reset link');
+      setError('Geçersiz şifre sıfırlama bağlantısı');
     }
   }, [searchParams]);
 
@@ -29,13 +29,13 @@ export default function ResetPassword() {
     setMessage('');
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Şifreler eşleşmiyor');
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('Şifre en az 6 karakter olmalı');
       setLoading(false);
       return;
     }
@@ -52,22 +52,22 @@ export default function ResetPassword() {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Password reset successfully! Redirecting to login...');
+        setMessage('Şifreniz başarıyla sıfırlandı! Giriş yapmaya yönlendiriliyorsunuz...');
         setTimeout(() => {
           router.push('/login');
         }, 2000);
       } else {
-        setError(data.error || 'Something went wrong');
+        setError(data.error || 'Bir hata oluştu');
       }
     } catch (error) {
-      setError('Network error. Please try again.');
+      setError('Ağ hatası. Lütfen tekrar deneyin.');
     } finally {
       setLoading(false);
     }
   };
 
   if (!token && !error) {
-    return <div>Loading...</div>;
+    return <div>Yükleniyor...</div>;
   }
 
   return (
@@ -81,7 +81,7 @@ export default function ResetPassword() {
             Aşağıya yeni şifrenizi girin.
           </p>
         </div>
-        
+
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>

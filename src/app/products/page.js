@@ -21,6 +21,7 @@ import {
   ChevronUp
 } from 'lucide-react';
 
+
 export default function ProductsPage() {
   const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -28,14 +29,15 @@ export default function ProductsPage() {
   const [addedToCart, setAddedToCart] = useState(null);
   const router = useRouter();
 
+
   // Filtreleme ve arama state'leri
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all'); // 'all', 'urun', 'hizmet'
-  const [stockFilter, setStockFilter] = useState('all'); // 'all', 'instock', 'outstock'
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [stockFilter, setStockFilter] = useState('all');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
-  const [sortBy, setSortBy] = useState('name'); // 'name', 'price', 'stock'
-  const [sortOrder, setSortOrder] = useState('asc'); // 'asc', 'desc'
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   useEffect(() => {
@@ -47,7 +49,6 @@ export default function ProductsPage() {
         });
         if (response.ok) {
           const data = await response.json();
-          // Sadece aktif ürünleri göster
           const activeProducts = data.filter(product => product.isActive !== false);
           setAllProducts(activeProducts);
         } else {
@@ -62,11 +63,9 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
-  // Filtreleme ve sıralama işlemi
   useEffect(() => {
     let filtered = [...allProducts];
 
-    // Arama filtresi
     if (searchTerm) {
       filtered = filtered.filter(product =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -74,19 +73,16 @@ export default function ProductsPage() {
       );
     }
 
-    // Kategori filtresi
     if (categoryFilter !== 'all') {
       filtered = filtered.filter(product => product.category === categoryFilter);
     }
 
-    // Stok filtresi
     if (stockFilter === 'instock') {
       filtered = filtered.filter(product => product.stock > 0);
     } else if (stockFilter === 'outstock') {
       filtered = filtered.filter(product => product.stock <= 0);
     }
 
-    // Fiyat filtresi
     if (minPrice) {
       filtered = filtered.filter(product => parseFloat(product.price) >= parseFloat(minPrice));
     }
@@ -94,10 +90,8 @@ export default function ProductsPage() {
       filtered = filtered.filter(product => parseFloat(product.price) <= parseFloat(maxPrice));
     }
 
-    // Sıralama
     filtered.sort((a, b) => {
       let comparison = 0;
-
       switch (sortBy) {
         case 'name':
           comparison = a.name.localeCompare(b.name, 'tr', { sensitivity: 'base' });
@@ -111,47 +105,66 @@ export default function ProductsPage() {
         default:
           comparison = 0;
       }
-
       return sortOrder === 'asc' ? comparison : -comparison;
     });
 
     setFilteredProducts(filtered);
   }, [allProducts, searchTerm, categoryFilter, stockFilter, minPrice, maxPrice, sortBy, sortOrder]);
 
-  // Güvenli fiyat formatı fonksiyonu
   const formatPrice = (price) => {
     if (!price) return '0.00';
     const numPrice = typeof price === 'string' ? parseFloat(price) : price;
     return isNaN(numPrice) ? '0.00' : numPrice.toFixed(2);
   };
 
-  // İndirim hesaplama fonksiyonu
   const calculateDiscount = (originalPrice, currentPrice) => {
     if (!originalPrice || originalPrice <= currentPrice) return 0;
     return Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
   };
 
-  // Randevu Al fonksiyonu
   const handleBookAppointment = (serviceName) => {
     router.push(`/book-appointment?service=${encodeURIComponent(serviceName)}`);
   };
 
-  // Sepete Ekle fonksiyonu
   const handleAddToCart = (productToAdd) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item.id === productToAdd.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({ ...productToAdd, quantity: 1 });
+    try {
+      // ✅ GÜVENLİK: Cart item'ını sanitize et
+      const sanitizeCartItem = (item) => ({
+        id: parseInt(item.id) || 0,
+        name: String(item.name || '').slice(0, 200),
+        price: Math.max(0, parseFloat(item.price) || 0),
+        imageUrl: String(item.imageUrl || '').slice(0, 500),
+        stock: Math.max(0, parseInt(item.stock) || 0),
+        category: item.category === 'hizmet' || item.category === 'urun' ? item.category : 'urun'
+      });
+
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+      // Cart boyut kontrolü (max 20 farklı ürün)
+      if (cart.length >= 20 && !cart.find(item => item.id === productToAdd.id)) {
+        alert('Sepetinizde maksimum 20 farklı ürün bulunabilir.');
+        return;
+      }
+
+      const existingItem = cart.find(item => item.id === productToAdd.id);
+      if (existingItem) {
+        // Max 99 adet kontrolü
+        existingItem.quantity = Math.min(99, existingItem.quantity + 1);
+      } else {
+        const sanitizedItem = sanitizeCartItem(productToAdd);
+        cart.push({ ...sanitizedItem, quantity: 1 });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('storage'));
+      setAddedToCart(productToAdd.id);
+      setTimeout(() => setAddedToCart(null), 2000);
+    } catch (error) {
+      console.error('Sepete ekleme hatası:', error);
+      alert('Ürün sepete eklenirken bir hata oluştu.');
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('storage'));
-    setAddedToCart(productToAdd.id);
-    setTimeout(() => setAddedToCart(null), 2000);
   };
 
-  // Filtreleri temizle
   const clearFilters = () => {
     setSearchTerm('');
     setCategoryFilter('all');
@@ -162,7 +175,6 @@ export default function ProductsPage() {
     setSortOrder('asc');
   };
 
-  // Aktif filtre sayısı
   const activeFiltersCount = [
     searchTerm,
     categoryFilter !== 'all',
@@ -178,15 +190,14 @@ export default function ProductsPage() {
   if (loading) return (
     <div className="flex justify-center items-center py-20">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      <span className="ml-3 text-gray-600">Ürünler yükleniyor...</span>
+      <span className="ml-3 text-gray-600">Yükleniyor...</span>
     </div>
   );
 
-  // Filtre Sidebar Komponenti
   const FilterSidebar = ({ className = "" }) => (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-2.5 ${className}`}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-gray-800 dark:text-white flex items-center">
+    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 p-4 ${className}`}>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-base font-semibold text-gray-800 dark:text-white flex items-center">
           <Sliders className="w-4 h-4 mr-2" />
           Filtreler
         </h3>
@@ -201,14 +212,13 @@ export default function ProductsPage() {
         )}
       </div>
 
-      <div className="space-y-3">
-        {/* Kategori Filtresi */}
+      <div className="space-y-4">
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Kategori</label>
+          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Kategori</label>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-2 py-1.5 text-xs sm:text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
+            className="w-full px-2.5 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
           >
             <option value="all">Tümü</option>
             <option value="urun">Ürünler</option>
@@ -216,13 +226,12 @@ export default function ProductsPage() {
           </select>
         </div>
 
-        {/* Stok Filtresi */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Stok Durumu</label>
+          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Stok Durumu</label>
           <select
             value={stockFilter}
             onChange={(e) => setStockFilter(e.target.value)}
-            className="w-full px-2 py-1.5 text-xs sm:text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
+            className="w-full px-2.5 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
           >
             <option value="all">Tümü</option>
             <option value="instock">Stokta Var</option>
@@ -230,43 +239,41 @@ export default function ProductsPage() {
           </select>
         </div>
 
-        {/* Fiyat Aralığı */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Fiyat Aralığı (₺)</label>
+          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Fiyat Aralığı (₺)</label>
           <div className="space-y-2">
             <input
               type="number"
-              placeholder="Min"
+              placeholder="Min Fiyat"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="w-full px-2 py-1.5 text-xs sm:text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
+              className="w-full px-2.5 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
             />
             <input
               type="number"
-              placeholder="Max"
+              placeholder="Max Fiyat"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-full px-2 py-1.5 text-xs sm:text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
+              className="w-full px-2.5 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
             />
           </div>
         </div>
 
-        {/* Sıralama */}
         <div>
-          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">Sıralama</label>
+          <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Sıralama</label>
           <div className="space-y-2">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-2 py-1.5 text-xs sm:text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
+              className="w-full px-2.5 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
             >
               <option value="name">İsme Göre</option>
-              <option value="price">Fiyata Göre</option>
+              <option value="price">Fiyat</option>
               <option value="stock">Stok Durumuna Göre</option>
             </select>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="w-full flex items-center justify-center gap-2 px-2 py-1.5 text-xs sm:text-sm border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
+              className="w-full flex items-center justify-center gap-2 px-2.5 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
             >
               {sortOrder === 'asc' ? (
                 <>
@@ -287,29 +294,27 @@ export default function ProductsPage() {
   );
 
   return (
-    <div className="w-full px-4 py-2">
-      {/* Header - Küçültülmüş */}
-      <div className="mb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-1">Ürünler & Hizmetler</h1>
+    // İSTEK: "biraz solda ve üstte olsun" -> py-6 yerine pt-4, mx-auto yerine ml-4 veya md:ml-12
+    <div className="w-full md:w-[98%] mx-0 md:ml-2 lg:ml-4 px-4 pt-4 pb-6 transition-colors duration-300">
+
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-1">Ürünler & Hizmetler</h1>
         <p className="text-sm text-gray-600 dark:text-gray-300">Aradığınız ürünü kolayca bulun</p>
       </div>
 
-      {/* Arama Kutusu ve Mobil Filtre Toggle - Daha kompakt */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 p-3 mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 p-4 mb-6">
         <div className="flex flex-col lg:flex-row gap-3">
-          {/* Arama Kutusu - Küçültülmüş */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
             <input
               type="text"
-              placeholder="Ürün adı veya açıklama ile ara..."
+              placeholder="Ürün ara..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm dark:bg-gray-700 dark:text-white"
+              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm dark:bg-gray-700 dark:text-white"
             />
           </div>
 
-          {/* Mobil Filtre Toggle ve Sonuç Sayısı */}
           <div className="flex items-center justify-between lg:justify-end gap-3">
             <span className="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
               {filteredProducts.length} ürün bulundu
@@ -331,7 +336,6 @@ export default function ProductsPage() {
           </div>
         </div>
 
-        {/* Mobil Filtreler */}
         {showMobileFilters && (
           <div className="lg:hidden mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
             <FilterSidebar />
@@ -339,20 +343,17 @@ export default function ProductsPage() {
         )}
       </div>
 
-      {/* Ana İçerik */}
-      <div className="flex flex-col lg:flex-row gap-4">
-        {/* Sol Sidebar - Küçültülmüş genişlik (256px -> 208px) */}
-        <div className="hidden lg:block w-[200px] flex-shrink-0">
-          <FilterSidebar className="sticky top-6" />
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="hidden lg:block w-64 flex-shrink-0">
+          <FilterSidebar className="sticky top-24" />
         </div>
 
-        {/* Sağ İçerik - Ürünler */}
         <div className="flex-1">
           {filteredProducts.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <Package className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
-              <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-white">Aradığınız kriterlere uygun ürün bulunamadı</h3>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Lütfen filtrelerinizi değiştirip tekrar deneyin.</p>
+              <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-white">Sonuç Bulunamadı</h3>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Aradığınız kriterlere uygun ürün bulunamadı. Lütfen filtrelerinizi değiştirip tekrar deneyin.</p>
               <button
                 onClick={clearFilters}
                 className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -362,7 +363,6 @@ export default function ProductsPage() {
             </div>
           ) : (
             <div className="space-y-10">
-              {/* Ürünler Bölümü */}
               {physicalProducts.length > 0 && (
                 <div>
                   <div className="flex items-center mb-5">
@@ -372,7 +372,7 @@ export default function ProductsPage() {
                     </h2>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {physicalProducts.map(product => (
                       <div key={product.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                         {product.imageUrl && (
@@ -392,7 +392,6 @@ export default function ProductsPage() {
 
                           <div className="flex items-center justify-between mb-4">
                             <div>
-                              {/* Fiyat ve İndirim Bilgisi */}
                               <div className="flex items-baseline space-x-2">
                                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatPrice(product.price)} ₺</span>
                                 {product.originalPrice && product.originalPrice > product.price && (
@@ -413,21 +412,19 @@ export default function ProductsPage() {
                                 ) : product.stock > 0 ? (
                                   <>
                                     <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
-                                    <span className="text-sm text-green-600 dark:text-green-400">Stokta: {product.stock}</span>
+                                    <span className="text-sm text-green-600 dark:text-green-400">Stok: {product.stock}</span>
                                   </>
                                 ) : (
                                   <>
                                     <XCircle className="w-4 h-4 text-red-500 mr-1" />
-                                    <span className="text-sm text-red-600 dark:text-red-400">Stokta Yok</span>
+                                    <span className="text-sm text-red-600 dark:text-red-400">Stok Tükendi</span>
                                   </>
                                 )}
                               </div>
                             </div>
                           </div>
 
-                          {/* Butonlar */}
                           <div className="space-y-3">
-                            {/* Ürünü İncele Butonu */}
                             <Link
                               href={`/products/${product.id}`}
                               className="w-full px-4 py-3 bg-black/60 text-white rounded-lg font-semibold 
@@ -438,7 +435,6 @@ export default function ProductsPage() {
                               Ürünü İncele
                             </Link>
 
-                            {/* Sepete Ekle Butonu */}
                             <button
                               className={`w-full py-3 px-4 rounded-lg font-medium transition-colors duration-200 ease-out flex items-center justify-center ${product.stock <= 0
                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -452,7 +448,7 @@ export default function ProductsPage() {
                               {product.stock <= 0 ? (
                                 <>
                                   <XCircle className="w-4 h-4 mr-2" />
-                                  Stokta Yok
+                                  Stok Tükendi
                                 </>
                               ) : addedToCart === product.id ? (
                                 <>
@@ -474,7 +470,6 @@ export default function ProductsPage() {
                 </div>
               )}
 
-              {/* Servisler/Randevu Bölümü */}
               {serviceProducts.length > 0 && (
                 <div>
                   <div className="flex items-center mb-5">
@@ -484,7 +479,7 @@ export default function ProductsPage() {
                     </h2>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {serviceProducts.map(service => (
                       <div key={service.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                         {service.imageUrl && (
@@ -524,4 +519,4 @@ export default function ProductsPage() {
       </div>
     </div>
   );
-} 
+}

@@ -18,20 +18,25 @@ export default function CartPage() {
     const cartData = JSON.parse(localStorage.getItem('cart') || '[]');
     setCart(cartData);
 
-    // Stok bilgilerini getir
+    // Stok bilgilerini getir - Public API kullan
     const fetchStockInfo = async () => {
       try {
         const productIds = cartData.map(item => item.id);
         if (productIds.length === 0) return;
 
-        const res = await fetch('/api/admin/products');
-        const products = await res.json();
-
-        const stockData = {};
-        products.forEach(product => {
-          stockData[product.id] = product.stock;
+        // ✅ GÜVENLİK: Public stok API'si kullan (admin endpoint yerine)
+        const res = await fetch('/api/products/stock', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productIds })
         });
 
+        if (!res.ok) {
+          console.error('Stok bilgileri alınamadı:', res.status);
+          return;
+        }
+
+        const stockData = await res.json();
         setStockInfo(stockData);
       } catch (error) {
         console.error('Stok bilgileri alınamadı:', error);

@@ -36,20 +36,46 @@ export async function POST(request) {
       return NextResponse.json({ error: 'İsim, fiyat ve kategori zorunludur.' }, { status: 400 });
     }
 
+    // ✅ GÜVENLİK: Input validation ve sanitization
+    const sanitizeString = (str, maxLength = 500) => {
+      if (typeof str !== 'string') return '';
+      return str.trim().slice(0, maxLength);
+    };
+
+    const sanitizedName = sanitizeString(name, 200);
+    const sanitizedDescription = sanitizeString(description || '', 2000);
+
+    // Numeric validation
+    const parsedPrice = parseFloat(price);
+    if (isNaN(parsedPrice) || parsedPrice < 0 || parsedPrice > 999999) {
+      return NextResponse.json({ error: 'Geçersiz fiyat değeri.' }, { status: 400 });
+    }
+
+    const parsedStock = parseInt(stock) || 0;
+    if (parsedStock < 0 || parsedStock > 999999) {
+      return NextResponse.json({ error: 'Geçersiz stok değeri.' }, { status: 400 });
+    }
+
+    // Category validation
+    const validCategories = ['urun', 'hizmet'];
+    if (!validCategories.includes(category)) {
+      return NextResponse.json({ error: 'Geçersiz kategori.' }, { status: 400 });
+    }
+
     const product = await prisma.product.create({
       data: {
-        name,
-        description: description || '',
-        price: parseFloat(price),
-        originalPrice: originalPrice ? parseFloat(originalPrice) : null,
-        imageUrl: imageUrl || '',
+        name: sanitizedName,
+        description: sanitizedDescription,
+        price: parsedPrice,
+        originalPrice: originalPrice ? Math.max(0, parseFloat(originalPrice) || 0) : null,
+        imageUrl: sanitizeString(imageUrl || '', 1000),
         category,
-        stock: parseInt(stock) || 0,
-        isActive: isActive !== undefined ? isActive : true,
-        specifications: specifications || {},
-        images: images || [],
-        soldCount: soldCount ? parseInt(soldCount) : 0,
-        viewCount: viewCount ? parseInt(viewCount) : 0,
+        stock: parsedStock,
+        isActive: isActive !== undefined ? Boolean(isActive) : true,
+        specifications: typeof specifications === 'object' ? specifications : {},
+        images: Array.isArray(images) ? images.slice(0, 10) : [],
+        soldCount: Math.max(0, parseInt(soldCount) || 0),
+        viewCount: Math.max(0, parseInt(viewCount) || 0),
       },
     });
     return NextResponse.json(product, { status: 201 });

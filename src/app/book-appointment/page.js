@@ -3,11 +3,14 @@
 import React, { useState, useEffect, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { Calendar, Clock, MapPin, Phone, FileText, CheckCircle, AlertCircle, Plus } from 'lucide-react';
+
 
 function BookAppointmentForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { data: session, status } = useSession();
+
 
   const [formData, setFormData] = useState({
     serviceType: searchParams.get('service') || '',
@@ -56,11 +59,9 @@ function BookAppointmentForm() {
     fetchServices();
   }, []);
 
-  // Seçilen tarihteki randevuları kontrol et
   useEffect(() => {
     const checkAvailability = async () => {
       if (!formData.date) return;
-
       try {
         const res = await fetch(`/api/appointments/availability?date=${formData.date}`);
         const data = await res.json();
@@ -70,7 +71,6 @@ function BookAppointmentForm() {
       }
     };
 
-    // Debounce ekleyelim - 500ms bekle
     const timeoutId = setTimeout(() => {
       checkAvailability();
     }, 500);
@@ -81,13 +81,12 @@ function BookAppointmentForm() {
   const handleChange = useCallback((e) => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
-    setError(''); // Her değişiklikte hata mesajını temizle
+    setError('');
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Form validasyonu
     if (!formData.serviceType || !formData.date || !formData.time || !formData.phone || !formData.address) {
       setError('Lütfen tüm gerekli alanları doldurun.');
       return;
@@ -124,93 +123,95 @@ function BookAppointmentForm() {
   }
 
   if (status === 'unauthenticated') {
-    return null; // useEffect zaten yönlendirme yapacak
+    return null;
   }
 
-  // Saatleri oluştur
   const timeSlots = [
     '09:00', '10:00', '11:00', '12:00', '14:00', '15:00'
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="relative sm:mx-auto sm:w-full sm:max-w-4xl">
-        <div className="text-center mb-8">
-          <div className="mx-auto h-16 w-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-            <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Teknik Servis Randevusu
-          </h2>
-          <p className="text-blue-100">
-            Uzman ekibimizle randevunuzu oluşturun
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-100 dark:bg-[#0B1120] pb-12 pt-4 md:pt-8 font-sans transition-colors duration-300 flex flex-col items-center">
 
-        <div className="bg-slate-800/90 py-8 px-6 shadow-lg rounded-2xl border border-gray-700 will-change-transform">
-          {/* Success/Error Messages */}
+      {/* Header Section */}
+      <div className="text-center mb-8 px-4">
+        <div className="mx-auto w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-blue-600/30">
+          <Calendar className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          Randevu Oluştur
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 font-medium">
+          Hızlı ve kolay servis randevusu alın
+        </p>
+      </div>
+
+      {/* Main Form Card */}
+      <div className="w-full max-w-4xl px-4">
+        <div className="bg-white dark:bg-[#151f32] rounded-2xl shadow-xl dark:shadow-2xl border border-gray-200 dark:border-gray-800 p-6 md:p-8 transition-colors">
+
+          {/* Status Messages */}
           {error && (
-            <div className="mb-6 p-4 rounded-lg flex items-center space-x-3 bg-red-500/20 border border-red-400/30 text-red-100">
-              <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <span className="text-sm font-medium">{error}</span>
+            <div className="mb-6 p-4 rounded-xl flex items-center space-x-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-200">
+              <AlertCircle className="h-5 w-5 flex-shrink-0" />
+              <span className="text-sm font-semibold">{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="mb-6 p-4 rounded-lg flex items-center space-x-3 bg-green-500/20 border border-green-400/30 text-green-100">
-              <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              <span className="text-sm font-medium">{success}</span>
+            <div className="mb-6 p-4 rounded-xl flex items-center space-x-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-200">
+              <CheckCircle className="h-5 w-5 flex-shrink-0" />
+              <span className="text-sm font-semibold">{success}</span>
             </div>
           )}
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {/* Service Type */}
-            <div>
-              <label htmlFor="serviceType" className="block text-sm font-medium text-gray-200 mb-2">
-                Servis Tipi
+            {/* Servis Tipi */}
+            <div className="space-y-2">
+              <label htmlFor="serviceType" className="text-sm font-bold text-gray-700 dark:text-gray-300 block">
+                Hizmet Türü
               </label>
-              <select
-                id="serviceType"
-                value={formData.serviceType}
-                onChange={handleChange}
-                required
-                className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              >
-                <option value="" className="text-gray-900">Seçiniz...</option>
-                {services.map(service => (
-                  <option key={service.id} value={service.name} className="text-gray-900">
-                    {service.name}
-                  </option>
-                ))}
-              </select>
+              <div className="relative">
+                <select
+                  id="serviceType"
+                  value={formData.serviceType}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#1e293b] border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm appearance-none font-medium"
+                >
+                  <option value="">Seçiniz...</option>
+                  {services.map(service => (
+                    <option key={service.id} value={service.name}>
+                      {service.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+              </div>
             </div>
 
-            {/* Description */}
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-200 mb-2">
-                Özel Notlar (İsteğe Bağlı)
+            {/* Özel Notlar */}
+            <div className="space-y-2">
+              <label htmlFor="description" className="text-sm font-bold text-gray-700 dark:text-gray-300 block">
+                Özel Notlar
               </label>
               <textarea
                 id="description"
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}
-                placeholder="Varsa özel notlarınızı buraya yazabilirsiniz..."
-                className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                placeholder="Cihazınızın sorunu hakkında kısaca bilgi verin..."
+                className="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#1e293b] border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none sm:text-sm font-medium"
               />
             </div>
 
-            {/* Contact Information */}
+            {/* Grid: Telefon ve Adres */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-200 mb-2">
-                  Telefon Numaranız
+              <div className="space-y-2">
+                <label htmlFor="phone" className="text-sm font-bold text-gray-700 dark:text-gray-300 block">
+                  Telefon Numarası
                 </label>
                 <input
                   type="tel"
@@ -218,93 +219,99 @@ function BookAppointmentForm() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                  placeholder="Telefon numaranızı girin"
+                  placeholder="Telefon Numarası"
+                  className="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#1e293b] border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm font-medium"
                 />
               </div>
 
-              <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-200 mb-2">
-                  Adresiniz
+              <div className="space-y-2">
+                <label htmlFor="address" className="text-sm font-bold text-gray-700 dark:text-gray-300 block">
+                  Adres
                 </label>
                 <textarea
                   id="address"
                   value={formData.address}
                   onChange={handleChange}
                   required
-                  rows={3}
-                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
-                  placeholder="Adresinizi girin"
+                  rows={1}
+                  placeholder="Adres"
+                  className="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#1e293b] border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none sm:text-sm min-h-[50px] font-medium"
                 />
               </div>
             </div>
 
-            {/* Date and Time */}
+            {/* Grid: Tarih ve Saat */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="date" className="block text-sm font-medium text-gray-200 mb-2">
-                  Randevu Tarihi
+              <div className="space-y-2">
+                <label htmlFor="date" className="text-sm font-bold text-gray-700 dark:text-gray-300 block">
+                  Tarih Seçin
                 </label>
-                <input
-                  type="date"
-                  id="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                />
+                <div className="relative">
+                  <input
+                    type="date"
+                    id="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                    required
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#1e293b] border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm font-medium"
+                  />
+                  <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 w-5 h-5 pointer-events-none" />
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="time" className="block text-sm font-medium text-gray-200 mb-2">
-                  Randevu Saati
+              <div className="space-y-2">
+                <label htmlFor="time" className="text-sm font-bold text-gray-700 dark:text-gray-300 block">
+                  Saat Seçin
                 </label>
-                <select
-                  id="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  required
-                  className="block w-full pl-3 pr-3 py-3 border border-white/20 rounded-lg bg-slate-700/50 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                >
-                  <option value="" className="text-gray-900">Seçiniz...</option>
-                  {timeSlots.map(time => {
-                    const slotCount = availableSlots[time] || 0;
-                    const isAvailable = slotCount < 2;
-                    return (
-                      <option
-                        key={time}
-                        value={time}
-                        disabled={!isAvailable}
-                        className={!isAvailable ? 'text-gray-400' : 'text-gray-900'}
-                      >
-                        {time} {!isAvailable ? '(Dolu)' : ''}
-                      </option>
-                    );
-                  })}
-                </select>
+                <div className="relative">
+                  <select
+                    id="time"
+                    value={formData.time}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3.5 bg-gray-50 dark:bg-[#1e293b] border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm appearance-none font-medium"
+                  >
+                    <option value="">Seçiniz...</option>
+                    {timeSlots.map(time => {
+                      const slotCount = availableSlots[time] || 0;
+                      const isAvailable = slotCount < 2;
+                      return (
+                        <option
+                          key={time}
+                          value={time}
+                          disabled={!isAvailable}
+                          className={!isAvailable ? 'text-gray-400 dark:text-gray-600' : ''}
+                        >
+                          {time} {!isAvailable ? '(Dolu)' : ''}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Submit Button */}
-            <div>
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150 ease-in-out shadow-lg hover:shadow-xl will-change-transform"
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center shadow-lg shadow-blue-600/20 active:scale-[0.98] text-base"
               >
                 {loading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Gönderiliyor...
-                  </div>
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    İşleniyor...
+                  </>
                 ) : (
-                  <div className="flex items-center">
-                    <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
+                  <>
+                    <Plus className="w-5 h-5 mr-2" />
                     Randevu Oluştur
-                  </div>
+                  </>
                 )}
               </button>
             </div>
@@ -316,25 +323,11 @@ function BookAppointmentForm() {
 }
 
 function LoadingState() {
+
   return (
-    <div className="min-h-screen bg-slate-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-slate-800/90 py-8 px-6 shadow-lg rounded-2xl border border-gray-700">
-          <div className="flex flex-col items-center justify-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
-              <svg className="h-8 w-8 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Yükleniyor...
-            </h2>
-            <p className="text-blue-100">
-              Lütfen bekleyin
-            </p>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-100 dark:bg-[#0B1120] flex flex-col justify-center items-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-white">...</h2>
     </div>
   );
 }
@@ -345,4 +338,4 @@ export default function BookAppointmentPage() {
       <BookAppointmentForm />
     </Suspense>
   );
-} 
+}

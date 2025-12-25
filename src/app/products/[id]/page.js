@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import { 
-  ShoppingCart, Star, ArrowLeft, Package, CheckCircle, XCircle, 
+import {
+  ShoppingCart, Star, ArrowLeft, Package, CheckCircle, XCircle,
   Heart, Share2, Truck, Shield, RotateCcw, MessageCircle,
   ChevronLeft, ChevronRight, ThumbsUp, ThumbsDown, Calendar,
   User, Verified, Filter, SortAsc, SortDesc, Edit3, Trash2, X,
@@ -21,7 +21,7 @@ export default function ProductDetailPage({ params }) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
-  
+
   // Yorum sistemi state'leri
   const [reviews, setReviews] = useState([]);
   const [reviewSummary, setReviewSummary] = useState(null);
@@ -29,17 +29,17 @@ export default function ProductDetailPage({ params }) {
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviewForm, setReviewForm] = useState({ rating: 5, title: '', comment: '', images: [] });
   const [submittingReview, setSubmittingReview] = useState(false);
-  
+
   // Yorum düzenleme state'leri
   const [editingReview, setEditingReview] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editForm, setEditForm] = useState({ rating: 5, title: '', comment: '', images: [] });
   const [submittingEdit, setSubmittingEdit] = useState(false);
-  
+
   // Benzer ürünler
   const [similarProducts, setSimilarProducts] = useState([]);
   const [similarLoading, setSimilarLoading] = useState(false);
-  
+
   // Galeri
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -54,25 +54,25 @@ export default function ProductDetailPage({ params }) {
           fetch(`/api/products/${params.id}/reviews`),
           fetch(`/api/products/${params.id}/similar`)
         ]);
-        
+
         if (!productRes.ok) throw new Error('Ürün bulunamadı.');
-        
+
         const productData = await productRes.json();
         setProduct(productData);
-        
-        if(ratingRes.ok) setRatingInfo(await ratingRes.json());
-        if(likeRes.ok) {
+
+        if (ratingRes.ok) setRatingInfo(await ratingRes.json());
+        if (likeRes.ok) {
           const likeData = await likeRes.json();
           setIsLiked(likeData.liked);
         }
-        
-        if(reviewsRes.ok) {
+
+        if (reviewsRes.ok) {
           const reviewsData = await reviewsRes.json();
           setReviews(reviewsData.reviews);
           setReviewSummary(reviewsData.summary);
         }
-        
-        if(similarRes.ok) {
+
+        if (similarRes.ok) {
           const similarData = await similarRes.json();
           setSimilarProducts(similarData.similarProducts);
         }
@@ -88,18 +88,44 @@ export default function ProductDetailPage({ params }) {
 
   const handleAddToCart = () => {
     if (!product) return;
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item.id === product.id);
-    if (existingItem) {
-      existingItem.quantity += quantity;
-    } else {
-      cart.push({ ...product, quantity });
+
+    try {
+      // ✅ GÜVENLİK: Cart item'ını sanitize et
+      const sanitizeCartItem = (item) => ({
+        id: parseInt(item.id) || 0,
+        name: String(item.name || '').slice(0, 200),
+        price: Math.max(0, parseFloat(item.price) || 0),
+        imageUrl: String(item.imageUrl || '').slice(0, 500),
+        stock: Math.max(0, parseInt(item.stock) || 0),
+        category: item.category === 'hizmet' || item.category === 'urun' ? item.category : 'urun'
+      });
+
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+      // Max 20 ürün kontrolü
+      if (cart.length >= 20 && !cart.find(item => item.id === product.id)) {
+        alert('Sepetinizde maksimum 20 farklı ürün bulunabilir.');
+        return;
+      }
+
+      const validQuantity = Math.min(99, Math.max(1, parseInt(quantity) || 1));
+      const existingItem = cart.find(item => item.id === product.id);
+
+      if (existingItem) {
+        existingItem.quantity = Math.min(99, existingItem.quantity + validQuantity);
+      } else {
+        const sanitizedItem = sanitizeCartItem(product);
+        cart.push({ ...sanitizedItem, quantity: validQuantity });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      window.dispatchEvent(new Event('storage'));
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000);
+    } catch (error) {
+      console.error('Sepete ekleme hatası:', error);
+      alert('Ürün sepete eklenirken bir hata oluştu.');
     }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('storage'));
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   const handleLike = async () => {
@@ -112,7 +138,7 @@ export default function ProductDetailPage({ params }) {
           'Content-Type': 'application/json',
         },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setIsLiked(data.liked);
@@ -126,7 +152,7 @@ export default function ProductDetailPage({ params }) {
 
   const handleShare = async () => {
     if (!product) return;
-    
+
     const shareData = {
       title: product.name,
       text: product.description || `${product.name} - ${formatPrice(product.price)} ₺`,
@@ -191,7 +217,7 @@ export default function ProductDetailPage({ params }) {
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     if (!product) return;
-    
+
     setSubmittingReview(true);
     try {
       const response = await fetch(`/api/products/${product.id}/reviews`, {
@@ -199,13 +225,13 @@ export default function ProductDetailPage({ params }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reviewForm),
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setReviews([data.review, ...reviews]);
         setShowReviewForm(false);
         setReviewForm({ rating: 5, title: '', comment: '', images: [] });
-        
+
         // Yorum özetini güncelle
         if (reviewSummary) {
           setReviewSummary({
@@ -260,7 +286,7 @@ export default function ProductDetailPage({ params }) {
   const handleUpdateReview = async (e) => {
     e.preventDefault();
     if (!product || !editingReview) return;
-    
+
     setSubmittingEdit(true);
     try {
       const response = await fetch(`/api/products/${product.id}/reviews`, {
@@ -271,10 +297,10 @@ export default function ProductDetailPage({ params }) {
           ...editForm
         }),
       });
-      
+
       if (response.ok) {
         const data = await response.json();
-        setReviews(reviews.map(review => 
+        setReviews(reviews.map(review =>
           review.id === editingReview.id ? data.review : review
         ));
         setShowEditModal(false);
@@ -295,21 +321,21 @@ export default function ProductDetailPage({ params }) {
 
   const handleDeleteReview = async (reviewId) => {
     if (!product || !confirm('Bu yorumu silmek istediğinizden emin misiniz?')) return;
-    
+
     try {
       const response = await fetch(`/api/products/${product.id}/reviews?reviewId=${reviewId}`, {
         method: 'DELETE',
       });
-      
+
       if (response.ok) {
         setReviews(reviews.filter(review => review.id !== reviewId));
-        
+
         // Yorum özetini güncelle
         if (reviewSummary) {
           const deletedReview = reviews.find(r => r.id === reviewId);
           if (deletedReview) {
             const newTotal = reviewSummary.totalReviews - 1;
-            const newAverage = newTotal > 0 
+            const newAverage = newTotal > 0
               ? ((reviewSummary.averageRating * reviewSummary.totalReviews - deletedReview.rating) / newTotal)
               : 0;
             setReviewSummary({
@@ -411,7 +437,7 @@ export default function ProductDetailPage({ params }) {
         <Package className="mx-auto h-16 w-16 text-gray-400 mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Ürün bulunamadı</h2>
         <p className="text-gray-600 mb-8">Aradığınız ürün mevcut değil veya kaldırılmış olabilir.</p>
-        <Link 
+        <Link
           href="/products"
           className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
         >
@@ -438,15 +464,15 @@ export default function ProductDetailPage({ params }) {
         <div className="space-y-4">
           {/* Ana Görsel */}
           <div className="aspect-square bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden relative">
-            <img 
-              src={product.images && product.images.length > 0 
-                ? product.images[currentImageIndex] 
+            <img
+              src={product.images && product.images.length > 0
+                ? product.images[currentImageIndex]
                 : product.imageUrl || 'https://placehold.co/600x600.png?text=Görsel+Yok'
-              } 
+              }
               alt={product.name}
               className="w-full h-full object-cover"
             />
-            
+
             {/* Galeri Navigasyon */}
             {product.images && product.images.length > 1 && (
               <>
@@ -467,7 +493,7 @@ export default function ProductDetailPage({ params }) {
               </>
             )}
           </div>
-          
+
           {/* Küçük Görseller */}
           {product.images && product.images.length > 1 && (
             <div className="flex space-x-2 overflow-x-auto">
@@ -475,14 +501,13 @@ export default function ProductDetailPage({ params }) {
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
-                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                    currentImageIndex === index 
-                      ? 'border-blue-500' 
+                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${currentImageIndex === index
+                      ? 'border-blue-500'
                       : 'border-gray-200 dark:border-gray-600'
-                  }`}
+                    }`}
                 >
-                  <img 
-                    src={image} 
+                  <img
+                    src={image}
                     alt={`${product.name} ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
@@ -496,19 +521,18 @@ export default function ProductDetailPage({ params }) {
         <div className="space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{product.name}</h1>
-            
+
             {/* Değerlendirmeler */}
             {ratingInfo && ratingInfo.count > 0 && (
               <div className="flex items-center space-x-2 mb-4">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className={`w-5 h-5 ${
-                        i < Math.round(ratingInfo.average) 
-                          ? 'fill-yellow-400 text-yellow-400' 
+                    <Star
+                      key={i}
+                      className={`w-5 h-5 ${i < Math.round(ratingInfo.average)
+                          ? 'fill-yellow-400 text-yellow-400'
                           : 'text-gray-300'
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -588,7 +612,7 @@ export default function ProductDetailPage({ params }) {
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Miktar</label>
               <div className="flex items-center space-x-3">
-                <button 
+                <button
                   onClick={decreaseQuantity}
                   disabled={quantity <= 1}
                   className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-gray-700 dark:text-gray-300"
@@ -598,7 +622,7 @@ export default function ProductDetailPage({ params }) {
                 <span className="w-16 h-10 border border-gray-300 rounded-lg flex items-center justify-center font-medium text-gray-700 dark:text-gray-300">
                   {quantity}
                 </span>
-                <button 
+                <button
                   onClick={increaseQuantity}
                   disabled={quantity >= product.stock}
                   className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-gray-700 dark:text-gray-300"
@@ -637,24 +661,22 @@ export default function ProductDetailPage({ params }) {
                   </>
                 )}
               </button>
-              
-              <button 
+
+              <button
                 onClick={handleLike}
                 disabled={likeLoading}
-                className={`p-4 border rounded-lg transition-colors ${
-                  isLiked 
-                    ? 'border-red-300 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30' 
+                className={`p-4 border rounded-lg transition-colors ${isLiked
+                    ? 'border-red-300 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30'
                     : 'border-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                }`}
+                  }`}
               >
-                <Heart className={`w-6 h-6 ${
-                  isLiked 
-                    ? 'text-red-600 dark:text-red-400 fill-current' 
+                <Heart className={`w-6 h-6 ${isLiked
+                    ? 'text-red-600 dark:text-red-400 fill-current'
                     : 'text-gray-600 dark:text-gray-300'
-                }`} />
+                  }`} />
               </button>
-              
-              <button 
+
+              <button
                 onClick={handleShare}
                 className="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
@@ -726,13 +748,12 @@ export default function ProductDetailPage({ params }) {
                 </div>
                 <div className="flex items-center justify-center mt-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className={`w-5 h-5 ${
-                        i < Math.round(reviewSummary.averageRating) 
-                          ? 'fill-yellow-400 text-yellow-400' 
+                    <Star
+                      key={i}
+                      className={`w-5 h-5 ${i < Math.round(reviewSummary.averageRating)
+                          ? 'fill-yellow-400 text-yellow-400'
                           : 'text-gray-300'
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>
@@ -740,20 +761,20 @@ export default function ProductDetailPage({ params }) {
                   {reviewSummary.totalReviews} yorum
                 </div>
               </div>
-              
+
               <div className="flex-1">
                 <div className="space-y-2">
                   {[5, 4, 3, 2, 1].map(rating => {
                     const count = reviewSummary.ratingDistribution[rating] || 0;
-                    const percentage = reviewSummary.totalReviews > 0 
-                      ? (count / reviewSummary.totalReviews) * 100 
+                    const percentage = reviewSummary.totalReviews > 0
+                      ? (count / reviewSummary.totalReviews) * 100
                       : 0;
-                    
+
                     return (
                       <div key={rating} className="flex items-center space-x-2">
                         <span className="text-sm text-gray-600 dark:text-gray-400 w-8">{rating}★</span>
                         <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-yellow-400 h-2 rounded-full"
                             style={{ width: `${percentage}%` }}
                           />
@@ -783,11 +804,10 @@ export default function ProductDetailPage({ params }) {
                       key={rating}
                       type="button"
                       onClick={() => setReviewForm({ ...reviewForm, rating })}
-                      className={`p-2 rounded-lg transition-colors ${
-                        reviewForm.rating >= rating
+                      className={`p-2 rounded-lg transition-colors ${reviewForm.rating >= rating
                           ? 'text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20'
                           : 'text-gray-300 hover:text-yellow-400'
-                      }`}
+                        }`}
                     >
                       <Star className={`w-6 h-6 ${reviewForm.rating >= rating ? 'fill-current' : ''}`} />
                     </button>
@@ -797,7 +817,7 @@ export default function ProductDetailPage({ params }) {
                   </span>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Başlık (İsteğe Bağlı)
@@ -811,73 +831,73 @@ export default function ProductDetailPage({ params }) {
                   maxLength={100}
                 />
               </div>
-              
-                             <div>
-                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                   Yorumunuz *
-                 </label>
-                 <textarea
-                   value={reviewForm.comment}
-                   onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                   rows={4}
-                   placeholder="Ürün hakkında düşüncelerinizi paylaşın..."
-                   required
-                   minLength={10}
-                 />
-                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                   En az 10 karakter yazmalısınız
-                 </div>
-               </div>
 
-               {/* Fotoğraf Yükleme */}
-               <div>
-                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                   Fotoğraflar (İsteğe Bağlı)
-                 </label>
-                 <div className="space-y-3">
-                   {/* Fotoğraf Yükleme Butonu */}
-                   <div className="flex items-center space-x-2">
-                     <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                       <Camera className="w-4 h-4 mr-2" />
-                       Fotoğraf Ekle
-                       <input
-                         type="file"
-                         multiple
-                         accept="image/*"
-                         onChange={(e) => handleImageUpload(e, 'review')}
-                         className="hidden"
-                       />
-                     </label>
-                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                       En fazla 5 fotoğraf, max 5MB
-                     </span>
-                   </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Yorumunuz *
+                </label>
+                <textarea
+                  value={reviewForm.comment}
+                  onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  rows={4}
+                  placeholder="Ürün hakkında düşüncelerinizi paylaşın..."
+                  required
+                  minLength={10}
+                />
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  En az 10 karakter yazmalısınız
+                </div>
+              </div>
 
-                   {/* Yüklenen Fotoğraflar */}
-                   {reviewForm.images.length > 0 && (
-                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                       {reviewForm.images.map((image, index) => (
-                         <div key={index} className="relative group">
-                           <img
-                             src={image}
-                             alt={`Yorum fotoğrafı ${index + 1}`}
-                             className="w-full h-24 object-cover rounded-lg"
-                           />
-                           <button
-                             type="button"
-                             onClick={() => removeImage(index, 'review')}
-                             className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                           >
-                             <XIcon className="w-3 h-3" />
-                           </button>
-                         </div>
-                       ))}
-                     </div>
-                   )}
-                 </div>
-               </div>
-              
+              {/* Fotoğraf Yükleme */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Fotoğraflar (İsteğe Bağlı)
+                </label>
+                <div className="space-y-3">
+                  {/* Fotoğraf Yükleme Butonu */}
+                  <div className="flex items-center space-x-2">
+                    <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                      <Camera className="w-4 h-4 mr-2" />
+                      Fotoğraf Ekle
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'review')}
+                        className="hidden"
+                      />
+                    </label>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      En fazla 5 fotoğraf, max 5MB
+                    </span>
+                  </div>
+
+                  {/* Yüklenen Fotoğraflar */}
+                  {reviewForm.images.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {reviewForm.images.map((image, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={image}
+                            alt={`Yorum fotoğrafı ${index + 1}`}
+                            className="w-full h-24 object-cover rounded-lg"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeImage(index, 'review')}
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <XIcon className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="flex space-x-3">
                 <button
                   type="submit"
@@ -919,13 +939,12 @@ export default function ProductDetailPage({ params }) {
                       </div>
                       <div className="flex items-center space-x-1 mt-1">
                         {[...Array(5)].map((_, i) => (
-                          <Star 
-                            key={i} 
-                            className={`w-4 h-4 ${
-                              i < review.rating 
-                                ? 'fill-yellow-400 text-yellow-400' 
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${i < review.rating
+                                ? 'fill-yellow-400 text-yellow-400'
                                 : 'text-gray-300'
-                            }`}
+                              }`}
                           />
                         ))}
                         <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">
@@ -958,37 +977,37 @@ export default function ProductDetailPage({ params }) {
                     )}
                   </div>
                 </div>
-                
+
                 {review.title && (
                   <h4 className="font-medium text-gray-900 dark:text-white mb-2">
                     {review.title}
                   </h4>
                 )}
-                
-                                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                   {review.comment}
-                 </p>
 
-                 {/* Yorum Fotoğrafları */}
-                 {review.images && review.images.length > 0 && (
-                   <div className="mt-4">
-                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                       {review.images.map((image, index) => (
-                         <div key={index} className="relative">
-                           <img
-                             src={image}
-                             alt={`Yorum fotoğrafı ${index + 1}`}
-                             className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                             onClick={() => {
-                               // Büyük görüntüleme için modal açılabilir
-                               window.open(image, '_blank');
-                             }}
-                           />
-                         </div>
-                       ))}
-                     </div>
-                   </div>
-                 )}
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {review.comment}
+                </p>
+
+                {/* Yorum Fotoğrafları */}
+                {review.images && review.images.length > 0 && (
+                  <div className="mt-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {review.images.map((image, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={image}
+                            alt={`Yorum fotoğrafı ${index + 1}`}
+                            className="w-full h-24 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                            onClick={() => {
+                              // Büyük görüntüleme için modal açılabilir
+                              window.open(image, '_blank');
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))
           ) : (
@@ -1017,14 +1036,14 @@ export default function ProductDetailPage({ params }) {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8">Benzer Ürünler</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {similarProducts.map((similarProduct) => (
-              <Link 
-                key={similarProduct.id} 
+              <Link
+                key={similarProduct.id}
                 href={`/products/${similarProduct.id}`}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
               >
                 <div className="aspect-square bg-gray-100 dark:bg-gray-700">
-                  <img 
-                    src={similarProduct.imageUrl || 'https://placehold.co/400x400.png?text=Görsel+Yok'} 
+                  <img
+                    src={similarProduct.imageUrl || 'https://placehold.co/400x400.png?text=Görsel+Yok'}
                     alt={similarProduct.name}
                     className="w-full h-full object-cover"
                   />
@@ -1053,7 +1072,7 @@ export default function ProductDetailPage({ params }) {
 
       {/* Geri Dön Butonu */}
       <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-        <Link 
+        <Link
           href="/products"
           className="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
         >
@@ -1082,7 +1101,7 @@ export default function ProductDetailPage({ params }) {
                   <X className="w-6 h-6" />
                 </button>
               </div>
-              
+
               <form onSubmit={handleUpdateReview} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -1094,11 +1113,10 @@ export default function ProductDetailPage({ params }) {
                         key={rating}
                         type="button"
                         onClick={() => setEditForm({ ...editForm, rating })}
-                        className={`p-2 rounded-lg transition-colors ${
-                          editForm.rating >= rating
+                        className={`p-2 rounded-lg transition-colors ${editForm.rating >= rating
                             ? 'text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20'
                             : 'text-gray-300 hover:text-yellow-400'
-                        }`}
+                          }`}
                       >
                         <Star className={`w-6 h-6 ${editForm.rating >= rating ? 'fill-current' : ''}`} />
                       </button>
@@ -1108,7 +1126,7 @@ export default function ProductDetailPage({ params }) {
                     </span>
                   </div>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Başlık (İsteğe Bağlı)
@@ -1122,73 +1140,73 @@ export default function ProductDetailPage({ params }) {
                     maxLength={100}
                   />
                 </div>
-                
-                                 <div>
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                     Yorumunuz *
-                   </label>
-                   <textarea
-                     value={editForm.comment}
-                     onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
-                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                     rows={4}
-                     placeholder="Ürün hakkında düşüncelerinizi paylaşın..."
-                     required
-                     minLength={10}
-                   />
-                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                     En az 10 karakter yazmalısınız
-                   </div>
-                 </div>
 
-                 {/* Fotoğraf Yükleme */}
-                 <div>
-                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                     Fotoğraflar (İsteğe Bağlı)
-                   </label>
-                   <div className="space-y-3">
-                     {/* Fotoğraf Yükleme Butonu */}
-                     <div className="flex items-center space-x-2">
-                       <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                         <Camera className="w-4 h-4 mr-2" />
-                         Fotoğraf Ekle
-                         <input
-                           type="file"
-                           multiple
-                           accept="image/*"
-                           onChange={(e) => handleImageUpload(e, 'edit')}
-                           className="hidden"
-                         />
-                       </label>
-                       <span className="text-xs text-gray-500 dark:text-gray-400">
-                         En fazla 5 fotoğraf, max 5MB
-                       </span>
-                     </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Yorumunuz *
+                  </label>
+                  <textarea
+                    value={editForm.comment}
+                    onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    rows={4}
+                    placeholder="Ürün hakkında düşüncelerinizi paylaşın..."
+                    required
+                    minLength={10}
+                  />
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    En az 10 karakter yazmalısınız
+                  </div>
+                </div>
 
-                     {/* Yüklenen Fotoğraflar */}
-                     {editForm.images.length > 0 && (
-                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                         {editForm.images.map((image, index) => (
-                           <div key={index} className="relative group">
-                             <img
-                               src={image}
-                               alt={`Yorum fotoğrafı ${index + 1}`}
-                               className="w-full h-24 object-cover rounded-lg"
-                             />
-                             <button
-                               type="button"
-                               onClick={() => removeImage(index, 'edit')}
-                               className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                             >
-                               <XIcon className="w-3 h-3" />
-                             </button>
-                           </div>
-                         ))}
-                       </div>
-                     )}
-                   </div>
-                 </div>
-                
+                {/* Fotoğraf Yükleme */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Fotoğraflar (İsteğe Bağlı)
+                  </label>
+                  <div className="space-y-3">
+                    {/* Fotoğraf Yükleme Butonu */}
+                    <div className="flex items-center space-x-2">
+                      <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                        <Camera className="w-4 h-4 mr-2" />
+                        Fotoğraf Ekle
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={(e) => handleImageUpload(e, 'edit')}
+                          className="hidden"
+                        />
+                      </label>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        En fazla 5 fotoğraf, max 5MB
+                      </span>
+                    </div>
+
+                    {/* Yüklenen Fotoğraflar */}
+                    {editForm.images.length > 0 && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {editForm.images.map((image, index) => (
+                          <div key={index} className="relative group">
+                            <img
+                              src={image}
+                              alt={`Yorum fotoğrafı ${index + 1}`}
+                              className="w-full h-24 object-cover rounded-lg"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => removeImage(index, 'edit')}
+                              className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <XIcon className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="flex space-x-3">
                   <button
                     type="submit"

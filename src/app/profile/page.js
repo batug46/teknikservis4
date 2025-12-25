@@ -11,6 +11,7 @@ import {
   CreditCard, Truck, Award, Heart, Wrench
 } from 'lucide-react';
 
+
 // Sayfayı dinamik olarak işaretle
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,7 @@ export default function ProfilePage() {
       router.push('/login');
     },
   });
+
 
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -443,33 +445,33 @@ export default function ProfilePage() {
     const statusConfigs = {
       order: {
         // Yeni status'ler (admin panelindeki gibi)
-        PENDING: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock, label: 'Bekliyor' },
-        CONFIRMED: { bg: 'bg-blue-100', text: 'text-blue-800', icon: AlertCircle, label: 'Onaylandı' },
-        PROCESSING: { bg: 'bg-purple-100', text: 'text-purple-800', icon: Package, label: 'Hazırlanıyor' },
-        SHIPPED: { bg: 'bg-indigo-100', text: 'text-indigo-800', icon: Package, label: 'Kargoda' },
-        DELIVERED: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle, label: 'Teslim Edildi' },
-        CANCELLED: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle, label: 'İptal Edildi' },
+        PENDING: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock, label: "Beklemede" },
+        CONFIRMED: { bg: 'bg-blue-100', text: 'text-blue-800', icon: AlertCircle, label: "Onaylandı" },
+        PROCESSING: { bg: 'bg-purple-100', text: 'text-purple-800', icon: Package, label: "Hazırlanıyor" },
+        SHIPPED: { bg: 'bg-indigo-100', text: 'text-indigo-800', icon: Package, label: "Kargolandı" },
+        DELIVERED: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle, label: "Teslim Edildi" },
+        CANCELLED: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle, label: "İptal Edildi" },
         // Eski status'ler (legacy destek)
-        pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock, label: 'Bekliyor' },
-        completed: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle, label: 'Tamamlandı' },
-        cancelled: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle, label: 'İptal Edildi' }
+        pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock, label: "Beklemede" },
+        completed: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle, label: "Tamamlandı" },
+        cancelled: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle, label: "İptal Edildi" }
       },
       appointment: {
-        PENDING: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock, label: 'Bekliyor' },
-        CONFIRMED: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle, label: 'Onaylandı' },
-        IN_PROGRESS: { bg: 'bg-blue-100', text: 'text-blue-800', icon: RefreshCw, label: 'Devam Ediyor' },
-        CANCELLED: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle, label: 'İptal Edildi' }
+        PENDING: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock, label: "Beklemede" },
+        CONFIRMED: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle, label: "Onaylandı" },
+        IN_PROGRESS: { bg: 'bg-blue-100', text: 'text-blue-800', icon: RefreshCw, label: "Devam Ediyor" },
+        CANCELLED: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle, label: "İptal Edildi" }
       },
       return: {
-        PENDING: { bg: 'bg-yellow-100 dark:bg-yellow-900/30', text: 'text-yellow-800 dark:text-yellow-200', icon: Clock, label: 'İade Talebi Beklemede' },
-        APPROVED: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-800 dark:text-green-200', icon: CheckCircle, label: 'İade Talebi Onaylandı' },
-        SHIPPING_REQUIRED: { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-800 dark:text-orange-200', icon: Package, label: 'Kargo Bekleniyor' },
-        SHIPPED: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-200', icon: Package, label: 'Kargolandı' },
-        RECEIVED: { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-800 dark:text-purple-200', icon: CheckCircle, label: 'Mağazada Alındı' },
-        REJECTED: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-800 dark:text-red-200', icon: XCircle, label: 'İade Talebi Reddedildi' },
-        PROCESSING: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-200', icon: RefreshCw, label: 'İade İşleniyor' },
-        COMPLETED: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-800 dark:text-green-200', icon: CheckCircle, label: 'İade Tamamlandı' },
-        CANCELLED: { bg: 'bg-gray-100 dark:bg-gray-900/30', text: 'text-gray-800 dark:text-gray-200', icon: XCircle, label: 'İade İptal Edildi' }
+        PENDING: { bg: 'bg-yellow-100 dark:bg-yellow-900/30', text: 'text-yellow-800 dark:text-yellow-200', icon: Clock, label: "Beklemede" },
+        APPROVED: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-800 dark:text-green-200', icon: CheckCircle, label: "Onaylandı" },
+        SHIPPING_REQUIRED: { bg: 'bg-orange-100 dark:bg-orange-900/30', text: 'text-orange-800 dark:text-orange-200', icon: Package, label: "Kargo Bekleniyor" },
+        SHIPPED: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-200', icon: Package, label: "Kargolandı" },
+        RECEIVED: { bg: 'bg-purple-100 dark:bg-purple-900/30', text: 'text-purple-800 dark:text-purple-200', icon: CheckCircle, label: "Mağazaya Ulaştı" },
+        REJECTED: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-800 dark:text-red-200', icon: XCircle, label: "Reddedildi" },
+        PROCESSING: { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-200', icon: RefreshCw, label: "İade İşleniyor" },
+        COMPLETED: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-800 dark:text-green-200', icon: CheckCircle, label: "İade Tamamlandı" },
+        CANCELLED: { bg: 'bg-gray-100 dark:bg-gray-900/30', text: 'text-gray-800 dark:text-gray-200', icon: XCircle, label: "İade İptal Edildi" }
       }
     };
 
@@ -525,7 +527,7 @@ export default function ProfilePage() {
     return (
       <div className="flex justify-center items-center py-20">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600 dark:text-gray-300">Profil yükleniyor...</span>
+        <span className="ml-3 text-gray-600 dark:text-gray-300">Profil Yükleniyor...</span>
       </div>
     );
   }
@@ -559,13 +561,13 @@ export default function ProfilePage() {
       {/* Navigation Tabs */}
       <div className="flex flex-wrap gap-1 mb-6 sm:mb-8 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
         {[
-          { id: 'profile', label: 'Profil Bilgileri', shortLabel: 'Profil', icon: User },
-          { id: 'orders', label: 'Siparişlerim', shortLabel: 'Siparişler', icon: ShoppingBag },
-          { id: 'returns', label: 'Taleplerim', shortLabel: 'Talepler', icon: RefreshCw },
-          { id: 'appointments', label: 'Randevularım', shortLabel: 'Randevular', icon: Calendar },
-          { id: 'liked', label: 'Beğendiklerim', shortLabel: 'Beğeniler', icon: Heart },
-          { id: 'services', label: 'Servis İşlemlerim', shortLabel: 'Servis', icon: Wrench },
-          { id: 'settings', label: 'Ayarlar', shortLabel: 'Ayarlar', icon: Settings }
+          { id: 'profile', label: "Profil Bilgileri", shortLabel: "Profil", icon: User },
+          { id: 'orders', label: "Siparişlerim", shortLabel: "Siparişler", icon: ShoppingBag },
+          { id: 'returns', label: "İade Taleplerim", shortLabel: "İadeler", icon: RefreshCw },
+          { id: 'appointments', label: "Randevularım", shortLabel: "Randevular", icon: Calendar },
+          { id: 'liked', label: "Beğendiğim Ürünler", shortLabel: "Beğeniler", icon: Heart },
+          { id: 'services', label: "Servis İşlemlerim", shortLabel: "Servis", icon: Wrench },
+          { id: 'settings', label: "Ayarlar", shortLabel: "Ayarlar", icon: Settings }
         ].map((tab) => {
           const Icon = tab.icon;
           return (
@@ -624,7 +626,7 @@ export default function ProfilePage() {
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 dark:text-gray-500 mt-1" />
                     <div>
                       <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Adres</div>
-                      <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">{user?.address || 'Belirtilmemiş'}</div>
+                      <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">{user?.address || ''}</div>
                     </div>
                   </div>
                 </div>
@@ -649,7 +651,7 @@ export default function ProfilePage() {
                   <div className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                     {orders.reduce((total, order) => total + order.items.filter(item => item.rating).length, 0)}
                   </div>
-                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Puanlanan Ürün</div>
+                  <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Değerlendirilen Ürünler</div>
                 </div>
               </div>
 
@@ -662,7 +664,7 @@ export default function ProfilePage() {
                       <div className="flex items-center space-x-3">
                         <CreditCard className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
                         <div>
-                          <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">Sipariş #{order.id}</div>
+                          <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">Sipariş No #{order.id}</div>
                           <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{formatDate(order.createdAt)}</div>
                         </div>
                       </div>
@@ -693,8 +695,8 @@ export default function ProfilePage() {
               {orders.length === 0 ? (
                 <div className="text-center py-12">
                   <ShoppingBag className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz sipariş yok</h3>
-                  <p className="text-gray-500 dark:text-gray-400">İlk siparişinizi vermek için ürünlere göz atın.</p>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz sipariş vermediniz</h3>
+                  <p className="text-gray-500 dark:text-gray-400">Ürünlere göz atarak ilk siparişinizi oluşturabilirsiniz.</p>
                 </div>
               ) : (
                 <div className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -702,7 +704,7 @@ export default function ProfilePage() {
                     <div key={order.id} className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Sipariş #{order.id}</h3>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Sipariş No #{order.id}</h3>
                           <p className="text-gray-500 dark:text-gray-400 flex items-center mt-1">
                             <Calendar className="w-4 h-4 mr-1" />
                             {formatDate(order.createdAt)}
@@ -718,7 +720,7 @@ export default function ProfilePage() {
                                 className="inline-flex items-center px-3 py-1 border border-red-300 dark:border-red-600 rounded-md text-sm font-medium text-red-700 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                               >
                                 <XCircle className="w-4 h-4 mr-1" />
-                                İptal Et
+                                Siparişi İptal Et
                               </button>
                             )}
                           </div>
@@ -735,7 +737,7 @@ export default function ProfilePage() {
                               <div>
                                 <h4 className="font-medium text-gray-900 dark:text-white">{item.product.name}</h4>
                                 <p className="text-gray-500 dark:text-gray-400">
-                                  {item.quantity} adet × {formatPrice(item.price)} ₺
+                                  {item.quantity} Adet × {formatPrice(item.price)} ₺
                                 </p>
                                 {item.status === 'CANCELLED' && (
                                   <div className="mt-1">
@@ -760,7 +762,7 @@ export default function ProfilePage() {
                                     onClick={() => handleRatingClick(item)}
                                     className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium text-left"
                                   >
-                                    Puanla
+                                    Değerlendir
                                   </button>
                                 )}
                                 {canCreateReturn(item.id) ? (
@@ -768,7 +770,7 @@ export default function ProfilePage() {
                                     onClick={() => handleReturnClick(item)}
                                     className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium text-left"
                                   >
-                                    İade Talebi
+                                    İade Talebi Oluştur
                                   </button>
                                 ) : (
                                   <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -809,7 +811,7 @@ export default function ProfilePage() {
               {returnsLoading ? (
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p className="text-gray-500 dark:text-gray-400">İade talepleri yükleniyor...</p>
+                  <p className="text-gray-500 dark:text-gray-400">İadeler yükleniyor...</p>
                 </div>
               ) : returns.length === 0 ? (
                 <div className="text-center py-12">
@@ -833,7 +835,7 @@ export default function ProfilePage() {
                             </span>
                             <span className="flex items-center">
                               <Package className="w-4 h-4 mr-1" />
-                              Sipariş #{returnItem.orderItem.order.id}
+                              Sipariş No #{returnItem.orderItem.order.id}
                             </span>
                           </div>
                         </div>
@@ -848,10 +850,10 @@ export default function ProfilePage() {
                           <p className="text-gray-700 dark:text-gray-300">{returnItem.reason}</p>
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-2">İade Türü</h4>
+                          <h4 className="font-medium text-gray-900 dark:text-white mb-2">İade Tipi</h4>
                           <p className="text-gray-700 dark:text-gray-300">
-                            {returnItem.returnType === 'REFUND' ? 'Para İadesi' :
-                              returnItem.returnType === 'EXCHANGE' ? 'Ürün Değişimi' : 'Kredi'}
+                            {returnItem.returnType === 'REFUND' ? "Para İadesi" :
+                              returnItem.returnType === 'EXCHANGE' ? "Değişim" : "Mağaza Kredisi"}
                           </p>
                         </div>
                       </div>
@@ -865,7 +867,7 @@ export default function ProfilePage() {
 
                       {returnItem.adminNotes && (
                         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                          <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Admin Notu</h4>
+                          <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Yönetici Notu</h4>
                           <p className="text-blue-800 dark:text-blue-200">{returnItem.adminNotes}</p>
                         </div>
                       )}
@@ -892,15 +894,15 @@ export default function ProfilePage() {
                             )}
                             {returnItem.shippingAddress && (
                               <div className="md:col-span-2">
-                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Gönderim Adresi:</span>
+                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Kargo Adresi:</span>
                                 <p className="text-green-700 dark:text-green-300">{returnItem.shippingAddress}</p>
                               </div>
                             )}
                             {returnItem.shippingCost !== null && (
                               <div>
-                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Kargo Ücreti:</span>
+                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Kargo Bedeli:</span>
                                 <p className="text-green-700 dark:text-green-300">
-                                  {returnItem.shippingCost === 0 ? 'Ücretsiz' : `${returnItem.shippingCost} ₺`}
+                                  {returnItem.shippingCost === 0 ? "Ücretsiz" : `${returnItem.shippingCost} ₺`}
                                 </p>
                               </div>
                             )}
@@ -912,13 +914,13 @@ export default function ProfilePage() {
                             )}
                             {returnItem.shippedAt && (
                               <div>
-                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Kargolandığı Tarih:</span>
+                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Kargolama Tarihi:</span>
                                 <p className="text-green-700 dark:text-green-300">{formatDate(returnItem.shippedAt)}</p>
                               </div>
                             )}
                             {returnItem.receivedAt && (
                               <div>
-                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Mağazada Alındığı Tarih:</span>
+                                <span className="text-sm font-medium text-green-800 dark:text-green-200">Ulaşma Tarihi:</span>
                                 <p className="text-green-700 dark:text-green-300">{formatDate(returnItem.receivedAt)}</p>
                               </div>
                             )}
@@ -951,7 +953,7 @@ export default function ProfilePage() {
               ) : services.length === 0 ? (
                 <div className="text-center py-12">
                   <Wrench className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz servis kaydınız yok</h3>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz servis kaydı yok</h3>
                   <p className="text-gray-500 dark:text-gray-400">Arızalı cihazlarınız için servis kaydı oluşturabilirsiniz.</p>
                 </div>
               ) : (
@@ -987,22 +989,22 @@ export default function ProfilePage() {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Cihaz Türü</h4>
+                          <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Cihaz Tipi</h4>
                           <p className="text-gray-700 dark:text-gray-300 text-sm">{service.deviceType}</p>
                         </div>
                         <div>
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Arıza</h4>
+                          <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Sorun Bildirimi</h4>
                           <p className="text-gray-700 dark:text-gray-300 text-sm">{service.problem}</p>
                         </div>
                         {service.estimatedCost && (
                           <div>
-                            <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Tahmini Tutar</h4>
+                            <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Tahmini Ücret</h4>
                             <p className="text-gray-700 dark:text-gray-300 text-sm">{formatPrice(service.estimatedCost)} ₺</p>
                           </div>
                         )}
                         {service.finalCost && (
                           <div>
-                            <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Sonuç Tutarı</h4>
+                            <h4 className="font-medium text-gray-900 dark:text-white mb-1 text-sm">Sonuç Ücret</h4>
                             <p className="font-bold text-blue-600 dark:text-blue-400 text-sm">{formatPrice(service.finalCost)} ₺</p>
                           </div>
                         )}
@@ -1028,8 +1030,8 @@ export default function ProfilePage() {
               {appointments.length === 0 ? (
                 <div className="text-center py-12">
                   <Calendar className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz randevu yok</h3>
-                  <p className="text-gray-500 dark:text-gray-400">İlk randevunuzu almak için servislerimize göz atın.</p>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz randevunuz yok</h3>
+                  <p className="text-gray-500 dark:text-gray-400">Servislerimizden yararlanmak için randevu oluşturun.</p>
                 </div>
               ) : (
                 <div className="grid gap-6 p-6">
@@ -1056,7 +1058,7 @@ export default function ProfilePage() {
                             className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900/30 hover:bg-blue-200 dark:hover:bg-blue-900/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                           >
                             <Eye className="w-4 h-4 mr-1" />
-                            Detaylar
+                            Detayları Gör
                           </button>
                         </div>
                       </div>
@@ -1089,20 +1091,20 @@ export default function ProfilePage() {
               <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white flex items-center">
                   <Heart className="w-5 h-5 mr-2 text-red-600" />
-                  Beğendiğim Ürünler ({likedProducts.length})
+                  Favorilerim ({likedProducts.length})
                 </h2>
               </div>
 
               {likedProductsLoading ? (
                 <div className="text-center py-12">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
-                  <p className="text-gray-500 dark:text-gray-400">Beğenilen ürünler yükleniyor...</p>
+                  <p className="text-gray-500 dark:text-gray-400">Favoriler yükleniyor...</p>
                 </div>
               ) : likedProducts.length === 0 ? (
                 <div className="text-center py-12">
                   <Heart className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz beğendiğiniz ürün yok</h3>
-                  <p className="text-gray-500">Ürünleri beğenmek için ürün sayfalarını ziyaret edin.</p>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Henüz favori ürününüz yok</h3>
+                  <p className="text-gray-500">Beğendiğiniz ürünleri kalp ikonuna tıklayarak favorilerinize ekleyebilirsiniz.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
@@ -1131,7 +1133,7 @@ export default function ProfilePage() {
                             ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
                             : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200'
                             }`}>
-                            {product.stock > 0 ? `Stokta (${product.stock})` : 'Stokta Yok'}
+                            {product.stock > 0 ? `Stokta Var (${product.stock})` : "Stokta Yok"}
                           </span>
                         </div>
 
@@ -1140,7 +1142,7 @@ export default function ProfilePage() {
                             href={`/products/${product.id}`}
                             className="flex-1 bg-blue-600 text-white py-1.5 px-3 rounded-lg text-center text-xs font-medium hover:bg-blue-700 transition-colors"
                           >
-                            İncele
+                            Ürünü İncele
                           </Link>
                           <button
                             onClick={() => {
@@ -1175,7 +1177,7 @@ export default function ProfilePage() {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-6 flex items-center">
                 <Settings className="w-5 h-5 mr-2 text-blue-600" />
-                Profil Ayarları
+                Ayarlar
               </h2>
 
               <form onSubmit={handleUpdateProfile} className="space-y-6">
@@ -1191,7 +1193,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">E-posta</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">E-Posta</label>
                     <input
                       type="email"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
@@ -1230,7 +1232,7 @@ export default function ProfilePage() {
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
-                        placeholder="Şifre değiştirmek için doldurun"
+                        placeholder="Mevcut şifreniz"
                       />
                     </div>
                     <div>
@@ -1240,7 +1242,7 @@ export default function ProfilePage() {
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder="Yeni şifrenizi girin"
+                        placeholder="Yeni şifreniz"
                       />
                     </div>
                   </div>
@@ -1252,7 +1254,7 @@ export default function ProfilePage() {
                     className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition-colors"
                   >
                     <Save className="w-4 h-4 mr-2" />
-                    Bilgileri Güncelle
+                    Profili Güncelle
                   </button>
                 </div>
               </form>
@@ -1267,7 +1269,7 @@ export default function ProfilePage() {
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Ürün Puanlama</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Değerlendir</h3>
                 <button
                   onClick={() => setShowRatingModal(false)}
                   className="text-gray-400 hover:text-gray-600"
@@ -1309,7 +1311,7 @@ export default function ProfilePage() {
                   disabled={rating === '0'}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Puanla
+                  Değerlendir
                 </button>
               </div>
             </div>
@@ -1324,7 +1326,7 @@ export default function ProfilePage() {
             <div className="mt-3">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                  Randevu Detayları - #{selectedAppointment.id}
+                  Detaylar - #{selectedAppointment.id}
                 </h3>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   {formatDate(selectedAppointment.date)} - {selectedAppointment.time}
@@ -1334,7 +1336,7 @@ export default function ProfilePage() {
               <div className="space-y-6">
                 {/* Randevu Durumu */}
                 <div>
-                  <h6 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-3">RANDEVU DURUMU</h6>
+                  <h6 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-3">DURUM</h6>
                   <div className="inline-block">
                     {getStatusBadge(selectedAppointment.status, 'appointment')}
                   </div>
@@ -1344,8 +1346,8 @@ export default function ProfilePage() {
                 <div>
                   <h6 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-3">MÜŞTERİ BİLGİLERİ</h6>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">İsim:</span> {selectedAppointment.user?.name || user?.name || 'Belirtilmemiş'}</div>
-                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Email:</span> {selectedAppointment.user?.email || user?.email || 'Belirtilmemiş'}</div>
+                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Ad Soyad:</span> {selectedAppointment.user?.name || user?.name || 'Belirtilmemiş'}</div>
+                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">E-Posta:</span> {selectedAppointment.user?.email || user?.email || 'Belirtilmemiş'}</div>
                     <div><span className="font-semibold text-gray-700 dark:text-gray-300">Telefon:</span> {selectedAppointment.phone || user?.phone || 'Belirtilmemiş'}</div>
                     <div><span className="font-semibold text-gray-700 dark:text-gray-300">Adres:</span> {selectedAppointment.address || user?.address || 'Belirtilmemiş'}</div>
                   </div>
@@ -1356,9 +1358,9 @@ export default function ProfilePage() {
                   <h6 className="text-base font-bold text-gray-900 dark:text-gray-100 mb-3">RANDEVU BİLGİLERİ</h6>
                   <div className="space-y-2 text-sm">
                     <div><span className="font-semibold text-gray-700 dark:text-gray-300">Hizmet:</span> {selectedAppointment.serviceType}</div>
-                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Özel Notlar:</span> {selectedAppointment.description || 'Belirtilmemiş'}</div>
-                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Fiyat:</span> {selectedAppointment.price && selectedAppointment.price > 0 ? `${selectedAppointment.price} ₺` : 'Belirtilmemiş'}</div>
-                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Oluşturulma:</span> {new Date(selectedAppointment.createdAt).toLocaleDateString('tr-TR', {
+                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Notlar:</span> {selectedAppointment.description || 'Belirtilmemiş'}</div>
+                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Tutar:</span> {selectedAppointment.price && selectedAppointment.price > 0 ? `${selectedAppointment.price} ₺` : 'Belirtilmemiş'}</div>
+                    <div><span className="font-semibold text-gray-700 dark:text-gray-300">Tarih:</span> {new Date(selectedAppointment.createdAt).toLocaleDateString('tr-TR', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -1411,7 +1413,7 @@ export default function ProfilePage() {
                     <div>
                       <h5 className="font-medium text-gray-900 dark:text-white">{selectedReturnItem.product.name}</h5>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {selectedReturnItem.quantity} adet × {formatPrice(selectedReturnItem.price)} ₺
+                        {selectedReturnItem.quantity} Adet × {formatPrice(selectedReturnItem.price)} ₺
                       </p>
                     </div>
                   </div>
@@ -1428,10 +1430,10 @@ export default function ProfilePage() {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                     required
                   >
-                    <option value="">İade nedenini seçin</option>
+                    <option value="">Bir neden seçin</option>
                     <option value="Ürün hasarlı geldi">Ürün hasarlı geldi</option>
-                    <option value="Ürün beklentilerimi karşılamadı">Ürün beklentilerimi karşılamadı</option>
-                    <option value="Yanlış ürün gönderildi">Yanlış ürün gönderildi</option>
+                    <option value="Ürün beklentilerimi karşılamadı">Beklentiyi karşılamadı</option>
+                    <option value="Yanlış ürün gönderildi">Yanlış ürün</option>
                     <option value="Ürün çalışmıyor">Ürün çalışmıyor</option>
                     <option value="Boyut/renk uygun değil">Boyut/renk uygun değil</option>
                     <option value="Diğer">Diğer</option>
@@ -1441,7 +1443,7 @@ export default function ProfilePage() {
                 {/* İade Türü */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    İade Türü *
+                    İade Tipi *
                   </label>
                   <select
                     value={returnType}
@@ -1450,8 +1452,8 @@ export default function ProfilePage() {
                     required
                   >
                     <option value="REFUND">Para İadesi</option>
-                    <option value="EXCHANGE">Ürün Değişimi</option>
-                    <option value="CREDIT">Kredi</option>
+                    <option value="EXCHANGE">Değişim</option>
+                    <option value="CREDIT">Mağaza Kredisi</option>
                   </select>
                 </div>
 
@@ -1465,7 +1467,7 @@ export default function ProfilePage() {
                     onChange={(e) => setReturnDescription(e.target.value)}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="İade talebiniz hakkında detaylı bilgi verebilirsiniz..."
+                    placeholder="İade ile ilgili ek açıklama yazabilirsiniz..."
                   />
                 </div>
               </div>
@@ -1499,7 +1501,7 @@ export default function ProfilePage() {
             <div className="mt-3">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                  {selectedCancelItem ? 'Ürün İptal Et' : 'Sipariş İptal Et'}
+                  {selectedCancelItem ? "Ürünü İptal Et" : "Siparişi İptal Et"}
                 </h3>
                 <button
                   onClick={handleCloseCancelModal}
@@ -1513,20 +1515,20 @@ export default function ProfilePage() {
                 {/* Sipariş Bilgileri */}
                 <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                   <h4 className="font-medium text-gray-900 dark:text-white mb-2">
-                    {selectedCancelItem ? 'Ürün Bilgileri' : 'Sipariş Bilgileri'}
+                    {selectedCancelItem ? "Ürün Bilgileri" : "Sipariş No"}
                   </h4>
                   <div className="space-y-2">
                     <p><span className="font-medium">Sipariş No:</span> #{selectedCancelOrder.id}</p>
                     {selectedCancelItem ? (
                       <>
-                        <p><span className="font-medium">Ürün:</span> {selectedCancelItem.product.name}</p>
+                        <p><span className="font-medium">Ürün Adı:</span> {selectedCancelItem.product.name}</p>
                         <p><span className="font-medium">Adet:</span> {selectedCancelItem.quantity}</p>
                         <p><span className="font-medium">Birim Fiyat:</span> {formatPrice(selectedCancelItem.price)} ₺</p>
                         <p><span className="font-medium">Toplam:</span> {formatPrice(selectedCancelItem.quantity * selectedCancelItem.price)} ₺</p>
                       </>
                     ) : (
                       <>
-                        <p><span className="font-medium">Toplam Tutar:</span> {formatPrice(selectedCancelOrder.total)} ₺</p>
+                        <p><span className="font-medium">Toplam:</span> {formatPrice(selectedCancelOrder.total)} ₺</p>
                         <p><span className="font-medium">Durum:</span> {getStatusBadge(selectedCancelOrder.status, 'order')}</p>
                       </>
                     )}
@@ -1545,12 +1547,12 @@ export default function ProfilePage() {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                     required
                   >
-                    <option value="">İptal nedenini seçin</option>
-                    <option value="Yanlış ürün seçtim">Yanlış ürün seçtim</option>
+                    <option value="">Bir neden seçin</option>
+                    <option value="Yanlış ürün seçtim">Yanlış seçim</option>
                     <option value="Fiyat değişti">Fiyat değişti</option>
                     <option value="Başka yerden aldım">Başka yerden aldım</option>
                     <option value="İhtiyacım kalmadı">İhtiyacım kalmadı</option>
-                    <option value="Teslimat süresi uzun">Teslimat süresi uzun</option>
+                    <option value="Teslimat süresi uzun">Teslimat çok uzun</option>
                     <option value="Diğer">Diğer</option>
                   </select>
                 </div>
@@ -1565,7 +1567,7 @@ export default function ProfilePage() {
                     onChange={(e) => setCancelDescription(e.target.value)}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
-                    placeholder="İptal talebiniz hakkında detaylı bilgi verebilirsiniz..."
+                    placeholder="İptal ile ilgili ek açıklama yazabilirsiniz..."
                   />
                 </div>
 
@@ -1580,8 +1582,8 @@ export default function ProfilePage() {
                       <div className="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
                         <p>
                           {selectedCancelItem
-                            ? 'Ürün iptal işlemi geri alınamaz. İptal etmek istediğinizden emin misiniz?'
-                            : 'Sipariş iptal işlemi geri alınamaz. İptal etmek istediğinizden emin misiniz?'
+                            ? "Bu ürünü iptal etmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+                            : "Siparişi komple iptal etmek istediğinize emin misiniz? Bu işlem geri alınamaz."
                           }
                         </p>
                       </div>
@@ -1598,7 +1600,7 @@ export default function ProfilePage() {
                 disabled={!cancelReason}
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-200"
               >
-                {selectedCancelItem ? 'Ürünü İptal Et' : 'Siparişi İptal Et'}
+                {selectedCancelItem ? "Ürünü İptal Et" : "Siparişi İptal Et"}
               </button>
               <button
                 type="button"

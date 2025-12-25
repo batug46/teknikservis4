@@ -6,6 +6,7 @@ import {
   Calendar
 } from 'lucide-react';
 
+
 export default function ContactPage() {
   const [settings, setSettings] = useState({});
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function ContactPage() {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     fetch('/api/site-settings')
@@ -33,7 +35,7 @@ export default function ContactPage() {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     console.log('Form data:', formData);
-    alert('Mesajınız başarıyla alındı! (Demo Modu)');
+    alert('İşlem Başarılı (İletişim Demo)');
     setFormData({ name: '', email: '', subject: '', message: '' });
     setIsSubmitting(false);
   };
@@ -50,10 +52,9 @@ export default function ContactPage() {
 
       {/* Header */}
       <div className="max-w-4xl mx-auto px-4 text-center mb-10 md:mb-16">
-        <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">İletişime Geçin</h1>
+        <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">İletişim</h1>
         <p className="text-gray-600 dark:text-gray-400 text-base md:text-xl font-light leading-relaxed">
-          Sorularınız, önerileriniz veya teknik destek talepleriniz için bizimle iletişime geçebilirsiniz.
-          Size en kısa sürede dönüş yapacağız.
+          Bizimle iletişime geçin, size yardımcı olalım.
         </p>
       </div>
 
@@ -65,7 +66,7 @@ export default function ContactPage() {
           <div className="bg-white dark:bg-[#1E293B] rounded-2xl p-6 md:p-10 shadow-lg dark:shadow-xl border border-gray-100 dark:border-gray-800 transition-colors">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8 flex items-center border-b border-gray-100 dark:border-gray-700 pb-4">
               <MessageSquare className="w-5 h-5 md:w-6 md:h-6 mr-3 text-blue-600 dark:text-blue-500" />
-              Mesaj Gönder
+              Bize Ulaşın
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
@@ -79,12 +80,12 @@ export default function ContactPage() {
                     onChange={handleChange}
                     maxLength={50}
                     className="w-full px-4 py-3 bg-gray-50 dark:bg-[#0F172A] border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm"
-                    placeholder="Adınız Soyadınız"
+                    placeholder="Ad Soyad"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">E-posta Adresi *</label>
+                  <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">E-Posta *</label>
                   <input
                     type="email"
                     name="email"
@@ -107,7 +108,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   maxLength={100}
                   className="w-full px-4 py-3 bg-gray-50 dark:bg-[#0F172A] border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm"
-                  placeholder="Mesajınızın konusunu belirtin"
+                  placeholder="Konu"
                   required
                 />
               </div>
@@ -121,7 +122,7 @@ export default function ContactPage() {
                   maxLength={1000}
                   rows="6"
                   className="w-full px-4 py-3 bg-gray-50 dark:bg-[#0F172A] border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none text-sm"
-                  placeholder="Mesajınızı buraya yazın..."
+                  placeholder="Mesajınız"
                   required
                 ></textarea>
               </div>
@@ -133,7 +134,7 @@ export default function ContactPage() {
                   className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center shadow-lg shadow-blue-900/20 active:scale-[0.98]"
                 >
                   <Send className={`w-5 h-5 mr-2 ${isSubmitting ? 'animate-pulse' : ''}`} />
-                  {isSubmitting ? 'Gönderiliyor...' : 'Mesajı Gönder'}
+                  {isSubmitting ? "Gönderiliyor..." : "Mesajı Gönder"}
                 </button>
               </div>
             </form>
@@ -156,7 +157,7 @@ export default function ContactPage() {
                   <div>
                     <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">Adres</p>
                     <p className="text-gray-900 dark:text-white text-sm md:text-base leading-relaxed whitespace-pre-line font-medium">
-                      {settings.contact_address || "Adres yükleniyor..."}
+                      {settings.contact_address || "Yükleniyor..."}
                     </p>
                   </div>
                 </div>
@@ -195,7 +196,7 @@ export default function ContactPage() {
               </h3>
               <div className="space-y-4 text-sm md:text-base">
                 <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-700/50">
-                  <span className="text-gray-800 dark:text-white font-medium text-base">Pazartesi - Cuma</span>
+                  <span className="text-gray-800 dark:text-white font-medium text-base">Hafta İçi</span>
                   <span className="text-gray-600 dark:text-gray-400 text-base">{settings.hours_weekday || "09:00 - 18:00"}</span>
                 </div>
                 <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-700/50">
@@ -211,9 +212,9 @@ export default function ContactPage() {
               <div className="mt-8 p-5 bg-gray-50 dark:bg-[#0F172A] rounded-xl border border-gray-200 dark:border-gray-700 flex items-start">
                 <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-500 mr-4 mt-0.5" />
                 <div>
-                  <h4 className="text-gray-900 dark:text-white font-bold text-base md:text-lg mb-1">Randevu Sistemimiz</h4>
+                  <h4 className="text-gray-900 dark:text-white font-bold text-base md:text-lg mb-1">Randevu Alın</h4>
                   <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed font-medium">
-                    Daha hızlı hizmet alabilmek için online randevu sistemimizi kullanabilirsiniz.
+                    Sıra beklemeden hizmet almak için online randevu oluşturabilirsiniz.
                   </p>
                 </div>
               </div>
@@ -247,7 +248,7 @@ export default function ContactPage() {
                 <Phone className="w-5 h-5 md:w-6 md:h-6 mr-3" />
                 Hemen Ara
               </a>
-              <a href="https://wa.me/905555555555" target="_blank" rel="noopener noreferrer" className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 md:py-4 px-8 md:px-10 rounded-xl transition-all flex items-center justify-center shadow-lg hover:shadow-xl active:scale-[0.98]">
+              <a href={`https://wa.me/${settings.contact_phone?.replace(/\s/g, '')}`} target="_blank" rel="noopener noreferrer" className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 md:py-4 px-8 md:px-10 rounded-xl transition-all flex items-center justify-center shadow-lg hover:shadow-xl active:scale-[0.98]">
                 <MessageSquare className="w-5 h-5 md:w-6 md:h-6 mr-3" />
                 WhatsApp
               </a>
