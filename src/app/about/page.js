@@ -155,9 +155,9 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12 md:mb-16">
             <span className="inline-block py-1 px-3 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-4 border border-blue-200 dark:border-blue-800">
-              Neden Biz?
+              Avantajlarımız
             </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Neden Biz?</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">Avantajlarımız</h2>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-sm md:text-base">
               Teknolojik çözümlerle hayatınızı kolaylaştırıyoruz. Profesyonel ekibimizle her zaman yanınızdayız.
             </p>

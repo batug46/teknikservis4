@@ -31,31 +31,31 @@ async function getServices() {
 
 // Servis Kartı Bileşeni
 function ServiceCard({ title, description, link, imageUrl }) {
-  return (
-    <div className="relative rounded-xl shadow-lg overflow-hidden group h-64 sm:h-72 lg:h-80 cursor-pointer will-change-transform transition-all duration-200 ease-out hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02]">
-      {/* Arka Plan Resmi */}
-      {imageUrl && (
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 ease-out group-hover:scale-110"
-          style={{ backgroundImage: `url(${imageUrl})` }}
-        />
-      )}
-      
-      {/* Overlay - Yazılar için koyu arka plan */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 group-hover:from-black/85 group-hover:via-black/55 group-hover:to-black/25 transition-all duration-200 ease-out"></div>
-      
-      {/* İçerik */}
-      <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-5 lg:p-6 transition-transform duration-200 ease-out group-hover:translate-y-[-2px]">
-        <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2 sm:mb-3 font-display transition-all duration-200 ease-out group-hover:text-blue-200 leading-tight">{title}</h3>
-        <p className="text-gray-200 mb-4 sm:mb-5 lg:mb-6 leading-relaxed transition-all duration-200 ease-out group-hover:text-gray-100 text-sm sm:text-base line-clamp-2 sm:line-clamp-3">{description}</p>
-        <div>
-          <Link href={link} className="inline-block px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-150 ease-out shadow-md hover:bg-white/30 hover:border-white/50 hover:shadow-lg hover:scale-105 transform">
-            Detayları Gör
-          </Link>
+    return (
+        <div className="relative rounded-xl shadow-lg overflow-hidden group h-64 sm:h-72 lg:h-80 cursor-pointer will-change-transform transition-all duration-200 ease-out hover:shadow-2xl hover:-translate-y-1 hover:scale-[1.02]">
+            {/* Arka Plan Resmi */}
+            {imageUrl && (
+                <div
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 ease-out group-hover:scale-110"
+                    style={{ backgroundImage: `url(${imageUrl})` }}
+                />
+            )}
+
+            {/* Overlay - Yazılar için koyu arka plan */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 group-hover:from-black/85 group-hover:via-black/55 group-hover:to-black/25 transition-all duration-200 ease-out"></div>
+
+            {/* İçerik */}
+            <div className="relative z-10 flex flex-col justify-end h-full p-4 sm:p-5 lg:p-6 transition-transform duration-200 ease-out group-hover:translate-y-[-2px]">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-2 sm:mb-3 font-display transition-all duration-200 ease-out group-hover:text-blue-200 leading-tight">{title}</h3>
+                <p className="text-gray-200 mb-4 sm:mb-5 lg:mb-6 leading-relaxed transition-all duration-200 ease-out group-hover:text-gray-100 text-sm sm:text-base line-clamp-2 sm:line-clamp-3">{description}</p>
+                <div>
+                    <Link href={link} className="inline-block px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 lg:py-3 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-150 ease-out shadow-md hover:bg-white/30 hover:border-white/50 hover:shadow-lg hover:scale-105 transform">
+                        Detayları Gör
+                    </Link>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default async function Home() {
@@ -65,30 +65,23 @@ export default async function Home() {
     return (
         <div className="min-h-screen">
             {/* Hero Section with Tech Background */}
-            <div className={`relative overflow-hidden ${
-                slides && slides.length > 0 
-                    ? '' 
-                    : 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900'
-            }`}>
+            <div className={`relative overflow-hidden ${slides && slides.length > 0
+                ? ''
+                : 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900'
+                }`}>
                 {/* Animated Background Elements - only show when no slides */}
                 {(!slides || slides.length === 0) && (
-                    <>
-                <div className="absolute inset-0">
-                    <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-                    <div className="absolute top-1/3 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-                    <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-2000"></div>
-                </div>
-                
-                {/* Tech Grid Pattern */}
-                <div className="absolute inset-0 opacity-40" style={{backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.05\"%3E%3Ccircle cx=\"30\" cy=\"30\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"}}></div>
-                    </>
-                )}
-                
-            {slides && slides.length > 0 ? (
-                    <div className="relative z-10">
-                <MainSlider slides={slides} />
+                    <div className="absolute inset-0">
+                        {/* Basit statik gradient - animasyon yok */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-emerald-500/10"></div>
                     </div>
-            ) : (
+                )}
+
+                {slides && slides.length > 0 ? (
+                    <div className="relative z-10">
+                        <MainSlider slides={slides} />
+                    </div>
+                ) : (
                     <div className="relative z-10 flex items-center justify-center min-h-screen text-center px-4">
                         <div className="max-w-4xl">
                             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent font-display leading-tight">
@@ -107,12 +100,12 @@ export default async function Home() {
                             </div>
                         </div>
                     </div>
-            )}
+                )}
             </div>
-            
+
             {/* Hizmetler Bölümü */}
-            <section className="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-slate-800 dark:to-slate-900 relative">
-                <div className="absolute inset-0 opacity-50" style={{backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%236366f1\" fill-opacity=\"0.03\"%3E%3Cpath d=\"M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')"}}></div>
+            <section className="py-20 bg-gradient-to-b from-gray-100 to-gray-200 dark:from-slate-900 dark:to-gray-900 relative">
+                {/* Temiz arka plan - blob yok */}
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="text-center mb-16 px-4">
                         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent tracking-tight font-display">Hizmetlerimiz</h2>
@@ -121,7 +114,7 @@ export default async function Home() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 items-stretch">
                         {services.length > 0 ? (
                             services.map((service) => (
-                                <ServiceCard 
+                                <ServiceCard
                                     key={service.id}
                                     title={service.title}
                                     description={service.description}
@@ -137,13 +130,10 @@ export default async function Home() {
                     </div>
                 </div>
             </section>
-            
+
             {/* Bize Ulaşın Bölümü */}
             <section className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900 relative overflow-hidden">
-                <div className="absolute inset-0">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl"></div>
-                </div>
+                {/* Basit arka plan - gereksiz blob'lar kaldırıldı */}
                 <div className="container mx-auto px-4 py-16 sm:py-20 text-center relative z-10">
                     <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white font-display leading-tight">Hemen Destek Alın</h3>
                     <p className="mt-4 text-base sm:text-lg leading-6 text-blue-100 max-w-2xl mx-auto font-medium px-4">

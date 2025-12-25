@@ -123,7 +123,7 @@ export default function TrackingPage() {
                     <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
                         <input
                             type="text"
-                            placeholder="Takip Kodu (Örn: TR-123456)"
+                            placeholder="Takip No"
                             className="flex-1 px-5 py-4 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white text-lg font-medium tracking-wider uppercase"
                             value={trackingCode}
                             onChange={(e) => setTrackingCode(e.target.value.toUpperCase())}

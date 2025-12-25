@@ -28,7 +28,7 @@ export function ThemeToggle() {
       icon: Sun,
     },
     {
-      value: 'dark', 
+      value: 'dark',
       label: 'Dark',
       icon: Moon,
     },
@@ -56,17 +56,17 @@ export function ThemeToggle() {
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-40" 
+          <div
+            className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          
+
           {/* Dropdown */}
-          <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 transform transition-all duration-150 ease-out origin-top-right">
+          <div className="absolute left-auto right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 transform transition-all duration-150 ease-out origin-top-right">
             {themes.map((themeOption) => {
               const Icon = themeOption.icon;
               const isActive = theme === themeOption.value;
-              
+
               return (
                 <button
                   key={themeOption.value}
@@ -74,11 +74,10 @@ export function ThemeToggle() {
                     setTheme(themeOption.value);
                     setIsOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-3 py-2 text-left text-sm transition-colors duration-150 ${
-                    isActive 
-                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' 
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-left text-sm transition-colors duration-150 ${isActive
+                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                       : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-4 h-4" />
                   <span>{themeOption.label}</span>
@@ -88,7 +87,7 @@ export function ThemeToggle() {
                 </button>
               );
             })}
-            
+
             {/* System theme indicator */}
             {theme === 'system' && (
               <div className="px-3 py-1 border-t border-gray-200 dark:border-gray-700 mt-1">
