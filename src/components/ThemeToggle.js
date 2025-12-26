@@ -61,8 +61,8 @@ export function ThemeToggle() {
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Dropdown */}
-          <div className="absolute left-auto right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 transform transition-all duration-150 ease-out origin-top-right">
+          {/* Dropdown - SAĞDAN açılır (mobil + desktop) */}
+          <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 transform transition-all duration-150 ease-out origin-top-right">
             {themes.map((themeOption) => {
               const Icon = themeOption.icon;
               const isActive = theme === themeOption.value;
@@ -75,8 +75,8 @@ export function ThemeToggle() {
                     setIsOpen(false);
                   }}
                   className={`w-full flex items-center gap-3 px-3 py-2 text-left text-sm transition-colors duration-150 ${isActive
-                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
                     }`}
                 >
                   <Icon className="w-4 h-4" />

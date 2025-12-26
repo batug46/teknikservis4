@@ -8,7 +8,7 @@ export async function POST(request) {
 
     if (!token || !password) {
       return NextResponse.json(
-        { error: 'Token and password are required' },
+        { error: 'Token ve şifre gereklidir' },
         { status: 400 }
       );
     }
@@ -25,7 +25,7 @@ export async function POST(request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Invalid or expired reset token' },
+        { error: 'Geçersiz veya süresi dolmuş token' },
         { status: 400 }
       );
     }
@@ -44,13 +44,13 @@ export async function POST(request) {
     });
 
     return NextResponse.json({
-      message: 'Password reset successfully'
+      message: 'Şifreniz başarıyla sıfırlandı'
     });
 
   } catch (error) {
     console.error('Reset password error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Sunucu hatası' },
       { status: 500 }
     );
   }

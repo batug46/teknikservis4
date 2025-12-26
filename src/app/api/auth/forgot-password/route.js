@@ -16,7 +16,7 @@ export async function POST(request) {
     const clientIP = getClientIP(request);
     if (!authRateLimit(clientIP, 5, 60000)) { // 5 şifre sıfırlama/1 dakika
       return NextResponse.json(
-        { error: 'Çok fazla şifre sıfırlama denemesi. Lütfen 1 dakika bekleyin.' }, 
+        { error: 'Çok fazla şifre sıfırlama denemesi. Lütfen 1 dakika bekleyin.' },
         { status: 429 }
       );
     }
@@ -25,7 +25,7 @@ export async function POST(request) {
 
     if (!email) {
       return NextResponse.json(
-        { error: 'Email address is required' },
+        { error: 'Email adresi gereklidir' },
         { status: 400 }
       );
     }
@@ -37,7 +37,7 @@ export async function POST(request) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'Bu email adresiyle kayıtlı kullanıcı bulunamadı' },
         { status: 404 }
       );
     }
@@ -57,59 +57,69 @@ export async function POST(request) {
 
     // Send email with Resend
     const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`;
-    
+
     const emailHtml = `
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Password Reset</title>
+        <title>Şifre Sıfırlama</title>
       </head>
       <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
           <h1 style="color: white; margin: 0; font-size: 28px;">Teknik Servis</h1>
-          <p style="color: white; margin: 10px 0 0 0; opacity: 0.9;">Password Reset Request</p>
+          <p style="color: white; margin: 10px 0 0 0; opacity: 0.9;">Şifre Sıfırlama Talebi</p>
         </div>
         
         <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e9ecef;">
-          <h2 style="color: #333; margin-top: 0;">Hello ${user.name},</h2>
+          <h2 style="color: #333; margin-top: 0;">Merhaba ${user.name},</h2>
           
-          <p>You requested a password reset for your account. Click the button below to reset your password:</p>
+          <p>Hesabınız için şifre sıfırlama talebinde bulundunuz. Şifrenizi sıfırlamak için aşağıdaki butona tıklayın:</p>
           
           <div style="text-align: center; margin: 30px 0;">
             <a href="${resetUrl}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
-              Reset Password
+              Şifremi Sıfırla
             </a>
           </div>
           
-          <p style="color: #666; font-size: 14px;">This link will expire in 1 hour for security reasons.</p>
+          <p style="color: #666; font-size: 14px;">Bu link güvenlik nedeniyle 1 saat içinde geçerliliğini yitirecektir.</p>
           
           <hr style="border: none; border-top: 1px solid #e9ecef; margin: 30px 0;">
           
           <p style="color: #666; font-size: 14px; margin-bottom: 0;">
-            If you didn't request this password reset, please ignore this email. Your password will remain unchanged.
+            Eğer bu şifre sıfırlama talebini siz yapmadıysanız, bu emaili görmezden gelebilirsiniz. Şifreniz değişmeyecektir.
           </p>
           
           <p style="color: #666; font-size: 14px; margin-top: 20px;">
-            Best regards,<br>
-            <strong>Teknik Servis Team</strong>
+            Saygılarımızla,<br>
+            <strong>Teknik Servis Ekibi</strong>
           </p>
         </div>
       </body>
       </html>
     `;
 
-    await resend.emails.send({
-      from: 'onboarding@resend.dev', // Geçici test adresi
-      to: email,
-      subject: 'Password Reset Request - Teknik Servis',
-      html: emailHtml,
-    });
+    try {
+      await resend.emails.send({
+        from: 'noreply@tekniverse.xyz', // ✅ Doğrulanmış domain email
+        to: email,
+        subject: 'Şifre Sıfırlama - Teknik Servis',
+        html: emailHtml,
+      });
 
-    return NextResponse.json({
-      message: 'Password reset email sent successfully'
-    });
+      return NextResponse.json({
+        message: 'Şifre sıfırlama linki email adresinize gönderildi'
+      });
+    } catch (emailError) {
+      console.error('Email gönderme hatası:', emailError);
+
+      // Email gönderiminde hata olsa bile token oluşturuldu
+      // Kullanıcıya daha genel bir mesaj döndür
+      return NextResponse.json({
+        message: 'Şifre sıfırlama isteği alındı. Email adresinizi kontrol edin.'
+      });
+    }
 
   } catch (error) {
     console.error('Forgot password error:', error);

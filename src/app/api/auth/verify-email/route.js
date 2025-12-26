@@ -14,7 +14,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function verifyEmailToken(token) {
   try {
     console.log('Token doğrulama başlatıldı:', token.substring(0, 10) + '...');
-    
+
     // Token'ı veritabanında bul
     const emailVerification = await prisma.emailVerification.findUnique({
       where: { token }
@@ -40,7 +40,7 @@ async function verifyEmailToken(token) {
       await prisma.emailVerification.delete({
         where: { token }
       });
-      
+
       return NextResponse.json(
         { error: 'Doğrulama süresi dolmuş. Lütfen tekrar doğrulama emaili isteyin' },
         { status: 400 }
@@ -74,7 +74,7 @@ export async function POST(request) {
     const clientIP = getClientIP(request);
     if (!authRateLimit(clientIP, 50, 60000)) { // 50 doğrulama/1 dakika (test için esnetildi)
       return NextResponse.json(
-        { error: 'Çok fazla doğrulama denemesi. Lütfen 1 dakika bekleyin.' }, 
+        { error: 'Çok fazla doğrulama denemesi. Lütfen 1 dakika bekleyin.' },
         { status: 429 }
       );
     }
@@ -109,29 +109,24 @@ export async function POST(request) {
       );
     }
 
-    // Önce mevcut doğrulama kaydını sil (yeniden gönder durumu için)
+    // 🔧 FIX: Sadece bu email için mevcut kaydı sil (yeniden gönder durumu için)
     await prisma.emailVerification.deleteMany({
       where: { email }
     });
 
-    // Süresi dolmuş token'ları temizle
+    // 🧹 CLEANUP: Süresi dolmuş token'ları temizle (tüm emailler için)
     await prisma.emailVerification.deleteMany({
       where: {
         expiresAt: { lt: new Date() }
       }
     });
 
-    // Tüm aktif token'ları temizle (test için - çakışmayı önlemek için)
-    // Bu sayede sadece 1 aktif token olur
-    await prisma.emailVerification.deleteMany({
-      where: {
-        expiresAt: { gte: new Date() }
-      }
-    });
+    // ❌ REMOVED: Tüm aktif tokenları silme kodu kaldırıldı
+    // Bu kod race condition'a sebep oluyordu - diğer kullanıcıların tokenlarını siliyordu
 
     // Doğrulama token'ı oluştur
     const verificationToken = crypto.randomBytes(32).toString('hex');
-    const tokenExpiry = new Date(Date.now() + 30 * 60 * 1000); // 30 dakika (test için uzatıldı)
+    const tokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 saat (email gecikmelerini kapsamak için)
 
     // Geçici doğrulama kaydı oluştur
     await prisma.emailVerification.create({
@@ -159,7 +154,7 @@ export async function POST(request) {
               Email Adresimi Doğrula
             </a>
             <p style="margin-top: 20px; color: #666;">
-              Bu link 30 dakika geçerlidir. Eğer bu işlemi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.
+              Bu link 1 saat geçerlidir. Eğer bu işlemi siz yapmadıysanız, bu emaili görmezden gelebilirsiniz.
             </p>
             <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
             <p style="color: #999; font-size: 12px;">
@@ -175,7 +170,7 @@ export async function POST(request) {
 
     } catch (emailError) {
       console.error('Email gönderme hatası:', emailError);
-      
+
       // Geçici kaydı sil
       await prisma.emailVerification.deleteMany({
         where: { email }
