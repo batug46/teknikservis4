@@ -491,21 +491,21 @@ export default function ProfilePage() {
 
     const alertConfig = {
       success: {
-        bg: 'bg-green-50 dark:bg-green-900/20',
-        border: 'border-green-200 dark:border-green-800',
-        text: 'text-green-800 dark:text-green-200',
+        bg: 'bg-green-50 dark:bg-green-900',
+        border: 'border-green-200 dark:border-green-700',
+        text: 'text-green-800 dark:text-green-100',
         icon: CheckCircle
       },
       danger: {
-        bg: 'bg-red-50 dark:bg-red-900/20',
-        border: 'border-red-200 dark:border-red-800',
-        text: 'text-red-800 dark:text-red-200',
+        bg: 'bg-red-50 dark:bg-red-900',
+        border: 'border-red-200 dark:border-red-700',
+        text: 'text-red-800 dark:text-red-100',
         icon: XCircle
       },
       warning: {
-        bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-        border: 'border-yellow-200 dark:border-yellow-800',
-        text: 'text-yellow-800 dark:text-yellow-200',
+        bg: 'bg-yellow-50 dark:bg-yellow-900',
+        border: 'border-yellow-200 dark:border-yellow-700',
+        text: 'text-yellow-800 dark:text-yellow-100',
         icon: AlertCircle
       }
     };
@@ -514,10 +514,18 @@ export default function ProfilePage() {
     const Icon = config.icon;
 
     return (
-      <div className={`${config.bg} ${config.border} border rounded-lg p-4 mb-6`}>
-        <div className="flex items-start">
-          <Icon className={`w-5 h-5 ${config.text} mr-3 mt-0.5`} />
-          <div className={config.text}>{message.text}</div>
+      <div className="fixed top-20 right-4 z-50 animate-slide-in-right max-w-sm">
+        <div className={`${config.bg} ${config.border} border-l-4 rounded-lg shadow-lg p-4`}>
+          <div className="flex items-start">
+            <Icon className={`w-5 h-5 ${config.text} mr-3 mt-0.5 flex-shrink-0`} />
+            <div className={`${config.text} font-medium`}>{message.text}</div>
+            <button
+              onClick={() => setMessage({ type: '', text: '' })}
+              className={`ml-auto pl-3 ${config.text} hover:opacity-70 transition-opacity`}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -1155,7 +1163,9 @@ export default function ProfilePage() {
                               }
                               localStorage.setItem('cart', JSON.stringify(cart));
                               window.dispatchEvent(new Event('storage'));
-                              alert('Ürün sepete eklendi!');
+                              // ✅ Modern toast notification (alert yerine)
+                              setMessage({ type: 'success', text: `"${product.name}" sepete eklendi` });
+                              setTimeout(() => setMessage({ type: '', text: '' }), 3000);
                             }}
                             disabled={product.stock <= 0}
                             className="flex-1 bg-green-600 text-white py-1.5 px-3 rounded-lg text-center text-xs font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"

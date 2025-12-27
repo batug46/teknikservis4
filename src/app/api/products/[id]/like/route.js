@@ -12,7 +12,7 @@ export async function POST(request, { params }) {
 
     const { id } = params;
     let userId = session.user?.id;
-    
+
     console.log('Session:', session);
     console.log('User ID:', userId);
     console.log('Product ID:', id);
@@ -81,13 +81,15 @@ export async function POST(request, { params }) {
 export async function GET(request, { params }) {
   try {
     const session = await getServerSession(authOptions);
+
+    // ✅ FIX: Giriş yapmamış kullanıcılar için liked: false döndür
     if (!session) {
-      return NextResponse.json({ error: 'Oturum açmanız gerekiyor' }, { status: 401 });
+      return NextResponse.json({ liked: false });
     }
 
     const { id } = params;
     let userId = session.user?.id;
-    
+
     console.log('GET - Session:', session);
     console.log('GET - User ID:', userId);
     console.log('GET - Product ID:', id);
@@ -104,7 +106,8 @@ export async function GET(request, { params }) {
     }
 
     if (!userId) {
-      return NextResponse.json({ error: 'Kullanıcı ID bulunamadı' }, { status: 400 });
+      // Kullanıcı bulunamadıysa da liked: false döndür
+      return NextResponse.json({ liked: false });
     }
 
     // Kullanıcının bu ürünü beğenip beğenmediğini kontrol et
@@ -120,6 +123,7 @@ export async function GET(request, { params }) {
     return NextResponse.json({ liked: !!existingLike });
   } catch (error) {
     console.error('Beğenme durumu kontrol hatası:', error);
-    return NextResponse.json({ error: 'Bir hata oluştu' }, { status: 500 });
+    // Hata durumunda da liked: false döndür (UI kırılmasın)
+    return NextResponse.json({ liked: false });
   }
 } 
