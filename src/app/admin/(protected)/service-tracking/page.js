@@ -252,8 +252,8 @@ export default function ServiceTrackingAdminPage() {
             {message.text && (
                 <div className="fixed top-20 right-4 z-50 animate-slide-in-right max-w-md">
                     <div className={`${message.type === 'success'
-                            ? 'bg-green-50 dark:bg-green-900 border-green-500'
-                            : 'bg-red-50 dark:bg-red-900 border-red-500'
+                        ? 'bg-green-50 dark:bg-green-900 border-green-500'
+                        : 'bg-red-50 dark:bg-red-900 border-red-500'
                         } border-l-4 rounded-lg shadow-lg p-4`}>
                         <div className="flex items-start">
                             {message.type === 'success' ? (
@@ -266,14 +266,14 @@ export default function ServiceTrackingAdminPage() {
                                 </svg>
                             )}
                             <div className={`${message.type === 'success'
-                                    ? 'text-green-800 dark:text-green-100'
-                                    : 'text-red-800 dark:text-red-100'
+                                ? 'text-green-800 dark:text-green-100'
+                                : 'text-red-800 dark:text-red-100'
                                 } font-medium`}>{message.text}</div>
                             <button
                                 onClick={() => setMessage({ type: '', text: '' })}
                                 className={`ml-auto pl-3 ${message.type === 'success'
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : 'text-red-600 dark:text-red-400'
+                                    ? 'text-green-600 dark:text-green-400'
+                                    : 'text-red-600 dark:text-red-400'
                                     } hover:opacity-70 transition-opacity`}
                             >
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -428,11 +428,10 @@ export default function ServiceTrackingAdminPage() {
                             )}
 
                             {/* Müşteri Bilgileri */}
-                            {/* Eğer aktif bir iptal talebi varsa, Admin önce ona karar vermelidir. Formun geri kalanı kilitlenir. */}
-                            {/* AYRICA: İptal onaylandıysa (CANCELLED) form kalıcı olarak kilitli kalır. */}
+                            {/* Sadece MÜŞTERİ iptal talebi gönderdiğinde form kilitlenir. Admin manuel CANCELLED seçerse form AÇIK kalır. */}
                             <fieldset
-                                disabled={(isEditMode && currentRecord?.cancellationReason && formData.status !== 'CANCELLED') || formData.status === 'CANCELLED'}
-                                className={`space-y-4 transition-opacity duration-300 ${(isEditMode && currentRecord?.cancellationReason && formData.status !== 'CANCELLED') || formData.status === 'CANCELLED' ? 'opacity-50 pointer-events-none filter grayscale-[0.5]' : ''}`}
+                                disabled={isEditMode && currentRecord?.cancellationReason && currentRecord.status !== 'CANCELLED'}
+                                className={`space-y-4 transition-opacity duration-300 ${isEditMode && currentRecord?.cancellationReason && currentRecord.status !== 'CANCELLED' ? 'opacity-50 pointer-events-none filter grayscale-[0.5]' : ''}`}
                             >
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
