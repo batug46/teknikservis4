@@ -284,7 +284,12 @@ export default function AdminSliderPage() {
                 scrollBehavior: 'smooth',
                 WebkitOverflowScrolling: 'touch',
                 overscrollBehavior: 'contain',
-                touchAction: 'pan-y'
+                touchAction: 'pan-y',
+                willChange: 'scroll-position',
+                contain: 'layout style paint',
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                perspective: 1000
               }}>
               <form id="slide-form" onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
