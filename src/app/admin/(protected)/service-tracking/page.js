@@ -15,6 +15,8 @@ export default function ServiceTrackingAdminPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentRecord, setCurrentRecord] = useState(null);
+    const [message, setMessage] = useState({ type: '', text: '' }); // Toast notification
+
 
     // Form State
     const [formData, setFormData] = useState({
@@ -62,7 +64,8 @@ export default function ServiceTrackingAdminPage() {
 
         // Basit validasyon
         if (!formData.customerName || !formData.customerPhone || !formData.problem) {
-            alert('Lütfen zorunlu alanları doldurun.');
+            setMessage({ type: 'danger', text: 'Lütfen zorunlu alanları doldurun.' });
+            setTimeout(() => setMessage({ type: '', text: '' }), 3000);
             return;
         }
 
@@ -90,15 +93,18 @@ export default function ServiceTrackingAdminPage() {
             });
 
             if (res.ok) {
-                alert(isEditMode ? 'Kayıt güncellendi.' : 'Yeni servis kaydı oluşturuldu.');
+                setMessage({ type: 'success', text: isEditMode ? 'Kayıt başarıyla güncellendi! ✓' : 'Yeni servis kaydı oluşturuldu! ✓' });
+                setTimeout(() => setMessage({ type: '', text: '' }), 3000);
                 fetchRecords();
                 closeModal();
             } else {
                 const err = await res.json();
-                alert(err.error || 'İşlem başarısız.');
+                setMessage({ type: 'danger', text: err.error || 'İşlem başarısız.' });
+                setTimeout(() => setMessage({ type: '', text: '' }), 4000);
             }
         } catch (error) {
-            alert('Bir hata oluştu.');
+            setMessage({ type: 'danger', text: 'Bağlantı hatası. Lütfen tekrar deneyin.' });
+            setTimeout(() => setMessage({ type: '', text: '' }), 4000);
         }
     };
 
@@ -242,6 +248,43 @@ export default function ServiceTrackingAdminPage() {
 
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+            {/* Toast Notification */}
+            {message.text && (
+                <div className="fixed top-20 right-4 z-50 animate-slide-in-right max-w-md">
+                    <div className={`${message.type === 'success'
+                            ? 'bg-green-50 dark:bg-green-900 border-green-500'
+                            : 'bg-red-50 dark:bg-red-900 border-red-500'
+                        } border-l-4 rounded-lg shadow-lg p-4`}>
+                        <div className="flex items-start">
+                            {message.type === 'success' ? (
+                                <svg className="w-5 h-5 text-green-600 dark:text-green-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            ) : (
+                                <svg className="w-5 h-5 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                            )}
+                            <div className={`${message.type === 'success'
+                                    ? 'text-green-800 dark:text-green-100'
+                                    : 'text-red-800 dark:text-red-100'
+                                } font-medium`}>{message.text}</div>
+                            <button
+                                onClick={() => setMessage({ type: '', text: '' })}
+                                className={`ml-auto pl-3 ${message.type === 'success'
+                                        ? 'text-green-600 dark:text-green-400'
+                                        : 'text-red-600 dark:text-red-400'
+                                    } hover:opacity-70 transition-opacity`}
+                            >
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
                     <Wrench className="w-6 h-6 mr-2" />
