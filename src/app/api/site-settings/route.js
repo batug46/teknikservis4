@@ -1,6 +1,11 @@
 
+
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
+
+// ⚡ PRODUCTION FIX: Disable cache, enable revalidation
+export const dynamic = 'force-dynamic'; // Her istekte yeni data
+export const revalidate = 0; // Cache yok
 
 // GET: Tüm ayarları getir (Herkese Açık)
 export async function GET(request) {
