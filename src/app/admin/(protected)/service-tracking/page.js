@@ -428,10 +428,21 @@ export default function ServiceTrackingAdminPage() {
                             )}
 
                             {/* Müşteri Bilgileri */}
-                            {/* Sadece MÜŞTERİ iptal talebi gönderdiğinde form kilitlenir. Admin manuel CANCELLED seçerse form AÇIK kalır. */}
+                            {/* 
+                              Form kilitlenir:
+                              1. Müşteri iptal talebi gönderdi VE henüz onaylanmadı → Sadece Onayla/Reddet butonları
+                              2. Status CANCELLED (müşteri onayı VEYA admin manuel) → Kalıcı kilitli, değiştirilemez
+                            */}
                             <fieldset
-                                disabled={isEditMode && currentRecord?.cancellationReason && currentRecord.status !== 'CANCELLED'}
-                                className={`space-y-4 transition-opacity duration-300 ${isEditMode && currentRecord?.cancellationReason && currentRecord.status !== 'CANCELLED' ? 'opacity-50 pointer-events-none filter grayscale-[0.5]' : ''}`}
+                                disabled={
+                                    (isEditMode && currentRecord?.cancellationReason && currentRecord.status !== 'CANCELLED')
+                                    || currentRecord?.status === 'CANCELLED'
+                                }
+                                className={`space-y-4 transition-opacity duration-300 ${(isEditMode && currentRecord?.cancellationReason && currentRecord.status !== 'CANCELLED')
+                                        || currentRecord?.status === 'CANCELLED'
+                                        ? 'opacity-50 pointer-events-none filter grayscale-[0.5]'
+                                        : ''
+                                    }`}
                             >
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
