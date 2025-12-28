@@ -142,8 +142,8 @@ export default function AdminSliderPage() {
       {/* Feedback Banner */}
       {feedback.show && (
         <div className={`p-4 rounded-lg border-l-4 ${feedback.type === 'success'
-            ? 'bg-green-50 dark:bg-green-900/20 border-green-400 text-green-700 dark:text-green-300'
-            : 'bg-red-50 dark:bg-red-900/20 border-red-400 text-red-700 dark:text-red-300'
+          ? 'bg-green-50 dark:bg-green-900/20 border-green-400 text-green-700 dark:text-green-300'
+          : 'bg-red-50 dark:bg-red-900/20 border-red-400 text-red-700 dark:text-red-300'
           }`}>
           {feedback.message}
         </div>
@@ -247,12 +247,21 @@ export default function AdminSliderPage() {
       {/* Modal */}
       {showModal && (
         <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
           onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
+          style={{
+            touchAction: 'none',
+            overscrollBehavior: 'contain'
+          }}
         >
           <div
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md my-8 flex flex-col relative"
-            style={{ maxHeight: 'calc(100vh - 4rem)' }}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-md flex flex-col"
+            style={{
+              maxHeight: 'min(90vh, 600px)',
+              touchAction: 'auto',
+              overscrollBehavior: 'contain'
+            }}
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
@@ -269,12 +278,13 @@ export default function AdminSliderPage() {
             </div>
 
             {/* Modal Body - Scrollable */}
-            <div className="flex-1 overflow-y-auto overscroll-contain p-6"
+            <div
+              className="overflow-y-auto overscroll-contain p-6"
               style={{
                 scrollBehavior: 'smooth',
                 WebkitOverflowScrolling: 'touch',
-                msOverflowStyle: 'auto',
-                scrollbarWidth: 'thin'
+                overscrollBehavior: 'contain',
+                touchAction: 'pan-y'
               }}>
               <form id="slide-form" onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
