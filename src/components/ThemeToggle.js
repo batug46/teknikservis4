@@ -61,8 +61,8 @@ export function ThemeToggle() {
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Dropdown - SAĞDAN açılır (mobil + desktop) */}
-          <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 transform transition-all duration-150 ease-out origin-top-right">
+          {/* Dropdown - Mobilde soldan, desktop'ta sağdan */}
+          <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 transform transition-all duration-150 ease-out origin-top-left sm:origin-top-right">
             {themes.map((themeOption) => {
               const Icon = themeOption.icon;
               const isActive = theme === themeOption.value;
