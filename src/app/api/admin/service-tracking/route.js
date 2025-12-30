@@ -102,7 +102,7 @@ export async function POST(request) {
                 const resend = new Resend(process.env.RESEND_API_KEY);
 
                 await resend.emails.send({
-                    from: 'Teknik Servis <onboarding@resend.dev>',
+                    from: 'Teknik Servis <noreply@tekniverse.xyz>',
                     to: customerEmail,
                     subject: `🔧 Servis Kaydınız Alındı: ${trackingCode}`,
                     html: `
@@ -119,7 +119,7 @@ export async function POST(request) {
                             <p>Cihazınızın güncel durumunu aşağıdaki butona tıklayarak veya web sitemizdeki <strong>Cihaz Takip</strong> sayfasından sorgulayabilirsiniz.</p>
                             
                             <div style="text-align: center; margin: 30px 0;">
-                                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/takip?code=${trackingCode}" 
+                                <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'https://tekniverse.xyz'}/takip?code=${trackingCode}" 
                                    style="background-color: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
                                     Arıza Durumunu Sorgula
                                 </a>

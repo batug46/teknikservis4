@@ -56,7 +56,8 @@ export async function POST(request) {
     });
 
     // Send email with Resend
-    const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`;
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXTAUTH_URL || 'https://tekniverse.xyz';
+    const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
 
     const emailHtml = `
       <!DOCTYPE html>
