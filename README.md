@@ -1,141 +1,359 @@
-# Teknik Servis Web Sitesi
+# 🔧 TeknikServis - Professional Service & E-Commerce Platform
 
-Bu proje, teknik servis randevu yönetimi ve ürün satışı için geliştirilmiş modern bir web uygulamasıdır. Next.js 14, Tailwind CSS ve Prisma teknolojileri kullanılarak oluşturulmuştur.
+> Modern, full-stack technical service tracking and e-commerce solution built with Next.js 14
 
-## ✨ Özellikler
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-Commercial-green)](LICENSE)
 
-### 👤 Kullanıcı Sistemi
-- Modern kayıt/giriş sayfaları (Glass Morphism tasarım)
-- Kullanıcı profil yönetimi
-- Real-time durum güncellemeleri
+## 🌟 **What You Get**
 
-### 📅 Randevu & Servis Yönetimi
-- Dinamik randevu sistemi
-- Teknik servis durumu takibi
-- Admin paneli ile randevu yönetimi
+A complete, production-ready platform for technical service businesses and e-commerce. Perfect for:
+- 💻 Computer repair shops
+- 📱 Electronics service centers
+- 🔧 Technical support companies
+- 🛒 Tech product retailers
 
-### 🛍 E-Ticaret
-- Ürün katalogu ve detay sayfaları
-- Sepet sistemi ve sipariş yönetimi
-- Ürün rating ve değerlendirme sistemi
+---
 
-### 🎨 Modern Tasarım
-- Responsive ve mobile-first tasarım
-- Interactive slider sistemi
-- Smooth animations ve hover efektleri
-- Glass morphism ve gradient backgrounds
+## ✨ **Key Features**
 
-### 👨‍💼 Admin Paneli
-- Kapsamlı yönetim paneli
-- Slider, servis ve ürün yönetimi
-- Kullanıcı ve sipariş takibi
-- Real-time istatistikler
+### 🎯 **Service Tracking System**
+- Customer device management
+- Real-time service status tracking
+- Cancellation request handling
+- SMS/Email notifications
+- Admin approval workflow
 
-## 🚀 Teknolojiler
+### 🛍️ **E-Commerce Platform**
+- Product catalog with categories
+- Shopping cart & wishlist
+- Stock management
+- Product reviews & ratings
+- Return/refund system
 
-### Frontend
-- **Next.js 14** - React framework
-- **React 18** - UI library
-- **Tailwind CSS** - Utility-first CSS framework
-- **Lucide React** - Modern icon library
+### 👤 **User Management**
+- NextAuth.js authentication
+- Email verification
+- Password reset
+- User profiles
+- Service history tracking
 
-### Backend & Database
-- **Prisma ORM** - Database toolkit
-- **PostgreSQL** - Production database
-- **NextAuth.js** - Authentication system
+### 🎨 **Modern UI/UX**
+- Dark mode support
+- Fully responsive design
+- Toast notifications
+- Smooth animations
+- Mobile-optimized
 
-### Development
-- **ESLint** - Code linting
-- **PostCSS** - CSS processing
+### 🔐 **Admin Panel**
+- Complete dashboard
+- User management
+- Product CRUD operations
+- Service tracking management
+- Site settings editor
+- Slider management
+- Analytics overview
 
-## 📦 Kurulum
+### 🎨 **Customization**
+- Dynamic site settings (contact, about, hours)
+- Customizable slider
+- Logo & branding options
+- Color scheme editor
 
-### 1. Projeyi Klonlayın
+---
+
+## 🚀 **Tech Stack**
+
+| Technology | Purpose |
+|------------|---------|
+| **Next.js 14** | React framework with App Router |
+| **PostgreSQL** | Relational database |
+| **Prisma ORM** | Type-safe database access |
+| **NextAuth.js** | Authentication |
+| **Tailwind CSS** | Styling |
+| **Resend** | Email service |
+| **Vercel** | Deployment (recommended) |
+
+---
+
+## 📦 **Installation**
+
+### **Prerequisites**
+- Node.js 18+ 
+- PostgreSQL database
+- npm or yarn
+
+### **Quick Start**
+
+1. **Clone & Install**
 ```bash
-git clone https://github.com/batu42g/teknik-servis-v2.git
-cd teknik-servis-v2
-```
-
-### 2. Bağımlılıkları Yükleyin
-```bash
+git clone <your-repo>
+cd teknik-servis4
 npm install
 ```
 
-### 3. Environment Variables
-`.env` dosyası oluşturun:
-```env
-DATABASE_URL="your-postgresql-connection-string"
-NEXTAUTH_SECRET="your-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
+2. **Environment Setup**
+```bash
+cp .env.example .env
 ```
+Edit `.env` with your credentials (see Configuration section)
 
-### 4. Veritabanı Kurulumu
+3. **Database Setup**
 ```bash
 npx prisma generate
-npx prisma db push
-npx prisma db seed
+npx prisma migrate deploy
 ```
 
-### 5. Development Server
+4. **Create Admin User**
+```bash
+# Visit: http://localhost:3000/create-admin
+# Use your ADMIN_CREATE_SECRET from .env
+```
+
+5. **Run Development Server**
 ```bash
 npm run dev
 ```
 
-## 🌐 Kullanım
+Visit `http://localhost:3000` 🎉
 
-- **Web sitesi:** `http://localhost:3000`
-- **Admin paneli:** `http://localhost:3000/admin`
-- **Varsayılan admin:** 
-  - Email: `admin@teknikservis.com`
-  - Şifre: `admin123`
+---
 
-## 📱 Sayfalar
+## ⚙️ **Configuration**
 
-### Kullanıcı Sayfaları
-- **Ana Sayfa** - Hero slider ve hizmet kartları
-- **Ürünler** - Ürün kataloğu ve detayları
-- **Randevu Al** - Servis randevu formu
-- **İletişim** - İletişim bilgileri ve form
-- **Profil** - Kullanıcı bilgileri ve siparişler
+### **Required Environment Variables**
 
-### Admin Sayfaları
-- **Dashboard** - Genel istatistikler
-- **Slider Yönetimi** - Ana sayfa slider kontrolü
-- **Hizmet Yönetimi** - Dinamik hizmet kartları
-- **Ürün Yönetimi** - Ürün CRUD işlemleri
-- **Randevu Yönetimi** - Randevu durumu kontrolü
-- **Kullanıcı Yönetimi** - Kullanıcı administrasyonu
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
 
-## 🔐 Güvenlik
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-here"
 
-- NextAuth.js ile güvenli authentication
-- JWT token tabanlı oturum yönetimi
-- Admin route protection
-- Input validation ve sanitization
+# Email (Resend)
+RESEND_API_KEY="re_xxxxxxxxxxxx"
 
-## 🎨 Tasarım Özellikleri
+# Admin Setup
+ADMIN_CREATE_SECRET="your-admin-secret"
 
-- **Modern UI/UX** - Tailwind CSS ile responsive tasarım
-- **Glass Morphism** - Modern cam efekti tasarımlar
-- **Smooth Animations** - Kullanıcı deneyimi için akıcı geçişler
-- **Interactive Elements** - Hover efektleri ve micro-interactions
-- **Mobile-First** - Tüm cihazlarda optimize edilmiş deneyim
+# Site
+NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+```
 
-## 📄 Lisans
+See `.env.example` for complete configuration.
 
-Bu proje MIT lisansı altında lisanslanmıştır.
+---
 
-## 🚨 Production Notes
+## 📚 **Usage Guide**
 
-1. **Environment Variables'ı güncelleyin**
-2. **Database connection string'i production'a ayarlayın**
-3. **NEXTAUTH_SECRET'i güçlü bir değerle değiştirin**
-4. **Admin hesap bilgilerini değiştirin**
+### **Admin Panel Access**
+1. Create admin account at `/create-admin`
+2. Login at `/login`
+3. Access admin panel at `/admin`
 
-## 🤝 Katkıda Bulunma
+### **Features Overview**
 
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit edin (`git commit -m 'Add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın 
+#### **Service Tracking**
+1. Customer submits service request
+2. Admin creates tracking record
+3. Updates sent via email
+4. Customer can track status
+5. Cancellation requests handled
+
+#### **E-Commerce**
+1. Products managed via admin panel
+2. Customers browse & add to cart
+3. Wishlist & favorites
+4. Reviews & ratings
+5. Order management
+
+#### **Site Customization**
+- Admin → Site Settings
+- Edit contact info, hours, about page
+- Upload slider images
+- Customize branding
+
+---
+
+## 🎨 **Screenshots**
+
+### Homepage
+Modern landing page with hero slider, featured products, and services.
+
+### Admin Dashboard
+Complete management interface for products, services, and users.
+
+### Service Tracking
+Real-time device tracking with status updates.
+
+### Mobile View
+Fully responsive design optimized for all devices.
+
+*(Add actual screenshots when deploying live demo)*
+
+---
+
+## 🔧 **Customization**
+
+### **Colors & Branding**
+Edit `tailwind.config.js`:
+```javascript
+theme: {
+  extend: {
+    colors: {
+      primary: '#your-color',
+      // ... customize
+    }
+  }
+}
+```
+
+### **Site Settings**
+All editable via Admin Panel → Site Settings:
+- Contact information
+- Business hours
+- About page content
+- Services & advantages
+
+### **Email Templates**
+Edit templates in `src/lib/emailTemplates.js`
+
+---
+
+## 📂 **Project Structure**
+
+```
+teknik-servis4/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── admin/             # Admin panel pages
+│   │   ├── api/               # API routes
+│   │   ├── products/          # Product pages
+│   │   └── ...
+│   ├── components/            # React components
+│   ├── lib/                   # Utilities & helpers
+│   └── styles/               # Global styles
+├── prisma/
+│   ├── schema.prisma         # Database schema
+│   └── migrations/           # Database migrations
+├── public/                   # Static assets
+└── .env                      # Environment variables
+```
+
+---
+
+## 🚀 **Deployment**
+
+### **Vercel (Recommended)**
+
+1. Push to GitHub
+2. Import to Vercel
+3. Add environment variables
+4. Deploy!
+
+### **Database Hosting**
+
+Recommended:
+- **Neon** (PostgreSQL, free tier)
+- **Supabase** (PostgreSQL, free tier)
+- **Railway** (PostgreSQL)
+
+---
+
+## 🛡️ **Security Features**
+
+✅ Password hashing (bcrypt)  
+✅ CSRF protection  
+✅ SQL injection prevention (Prisma)  
+✅ XSS protection  
+✅ Secure session management  
+✅ Email verification  
+✅ Role-based access control  
+
+---
+
+## 🐛 **Troubleshooting**
+
+### **Database Connection Issues**
+```bash
+# Reset database
+npx prisma migrate reset
+
+# Regenerate client
+npx prisma generate
+```
+
+### **Email Not Sending**
+- Check Resend API key
+- Verify domain settings
+- Check spam folder
+
+### **Build Errors**
+```bash
+# Clear cache
+rm -rf .next
+npm run build
+```
+
+---
+
+## 📝 **License**
+
+**Commercial License** - This is a premium product.  
+Purchase includes:
+- ✅ Source code
+- ✅ Lifetime updates
+- ✅ Email support (3 months)
+- ✅ Commercial use rights
+
+**NOT Included:**
+- ❌ Resale rights
+- ❌ Redistribution
+- ❌ SaaS deployment
+
+---
+
+## 🤝 **Support**
+
+- **Email**: support@your-email.com
+- **Documentation**: [Link to docs]
+- **Issues**: Report bugs via email
+- **Updates**: Automatic via GitHub
+
+---
+
+## 🎯 **Roadmap**
+
+Upcoming features:
+- [ ] Multi-language support
+- [ ] SMS notifications (Twilio)
+- [ ] Payment integration (Stripe)
+- [ ] Inventory alerts
+- [ ] Analytics dashboard
+- [ ] Export/Import data
+
+---
+
+## 🙏 **Credits**
+
+Built with:
+- Next.js by Vercel
+- Tailwind CSS
+- Prisma
+- NextAuth.js
+- Lucide Icons
+
+---
+
+## 📞 **Contact**
+
+Questions? Reach out:
+- 📧 Email: your@email.com
+- 🌐 Website: your-site.com
+- 💬 Twitter: @yourhandle
+
+---
+
+**Made with ❤️ for service businesses worldwide**

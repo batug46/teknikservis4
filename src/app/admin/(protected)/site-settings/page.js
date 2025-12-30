@@ -16,6 +16,15 @@ export default function SiteSettingsPage() {
         contact_email: '',
         contact_address: '',
         contact_map_url: '',
+        // Sosyal Medya
+        social_facebook: '',
+        social_twitter: '',
+        social_instagram: '',
+        social_linkedin: '',
+        social_youtube: '',
+        // Footer
+        footer_about: 'Profesyonel teknik servis hizmetleri',
+        footer_copyright: '© 2024 TeknikServis. Tüm hakları saklıdır.',
         about_title: '',
         about_content: '',
         mission_title: '',
@@ -106,8 +115,8 @@ export default function SiteSettingsPage() {
             {message.text && (
                 <div className="fixed top-20 right-4 z-50 animate-slide-in-right max-w-md">
                     <div className={`${message.type === 'success'
-                            ? 'bg-green-50 dark:bg-green-900 border-green-500'
-                            : 'bg-red-50 dark:bg-red-900 border-red-500'
+                        ? 'bg-green-50 dark:bg-green-900 border-green-500'
+                        : 'bg-red-50 dark:bg-red-900 border-red-500'
                         } border-l-4 rounded-lg shadow-lg p-4`}>
                         <div className="flex items-start">
                             {message.type === 'success' ? (
@@ -120,14 +129,14 @@ export default function SiteSettingsPage() {
                                 </svg>
                             )}
                             <div className={`${message.type === 'success'
-                                    ? 'text-green-800 dark:text-green-100'
-                                    : 'text-red-800 dark:text-red-100'
+                                ? 'text-green-800 dark:text-green-100'
+                                : 'text-red-800 dark:text-red-100'
                                 } font-medium`}>{message.text}</div>
                             <button
                                 onClick={() => setMessage({ type: '', text: '' })}
                                 className={`ml-auto pl-3 ${message.type === 'success'
-                                        ? 'text-green-600 dark:text-green-400'
-                                        : 'text-red-600 dark:text-red-400'
+                                    ? 'text-green-600 dark:text-green-400'
+                                    : 'text-red-600 dark:text-red-400'
                                     } hover:opacity-70 transition-opacity`}
                             >
                                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -188,7 +197,16 @@ export default function SiteSettingsPage() {
                     <Star className="w-4 h-4 mr-2" />
                     Avantajlar
                 </button>
-            </div>
+                <button
+                    onClick={() => setActiveTab('social')}
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center whitespace-nowrap ${activeTab === 'social' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'}`}
+                >
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+                        <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+                    </svg>
+                    Sosyal Medya
+                </button>            </div>
 
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
                 {activeTab === 'contact' && (
@@ -680,7 +698,111 @@ export default function SiteSettingsPage() {
                         </div>
                     </div>
                 )}
+
+                {/* Sosyal Medya Tab İçeriği */}
+                {activeTab === 'social' && (
+                    <div className="space-y-6">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-4 mb-4 flex items-center">
+                                <Globe className="w-5 h-5 mr-2" />
+                                Sosyal Medya Linkleri
+                            </h3>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Facebook</label>
+                                    <input
+                                        type="url"
+                                        name="social_facebook"
+                                        value={settings.social_facebook || ''}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="https://facebook.com/sayfaniz"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">X (Twitter)</label>
+                                    <input
+                                        type="url"
+                                        name="social_twitter"
+                                        value={settings.social_twitter || ''}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="https://x.com/kullaniciadi"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Instagram</label>
+                                    <input
+                                        type="url"
+                                        name="social_instagram"
+                                        value={settings.social_instagram || ''}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="https://instagram.com/kullaniciadi"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">LinkedIn</label>
+                                    <input
+                                        type="url"
+                                        name="social_linkedin"
+                                        value={settings.social_linkedin || ''}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="https://linkedin.com/company/sirket"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">YouTube</label>
+                                    <input
+                                        type="url"
+                                        name="social_youtube"
+                                        value={settings.social_youtube || ''}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="https://youtube.com/@kanal"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 border-b pb-4 mb-4 flex items-center">
+                                <FileText className="w-5 h-5 mr-2" />
+                                Footer Metinleri
+                            </h3>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kısa Açıklama</label>
+                                    <textarea
+                                        name="footer_about"
+                                        value={settings.footer_about || ''}
+                                        onChange={handleChange}
+                                        rows="3"
+                                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="Footer'da görünecek kısa açıklama..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Copyright Metni</label>
+                                    <input
+                                        type="text"
+                                        name="footer_copyright"
+                                        value={settings.footer_copyright || ''}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="© 2024 TeknikServis. Tüm hakları saklıdır."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
 }
+
+
