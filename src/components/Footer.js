@@ -114,6 +114,11 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/book-appointment" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors">
+                                    Randevu Al
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/takip" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors">
                                     Cihaz Takip
                                 </Link>
